@@ -28,13 +28,13 @@ if (isset($_POST['studentid']) && isset($_POST['purposeid'])) { //add pass!
     $teacherid = $_SESSION['teacherid'];
     // if (isadmin()) {
     //     null;
-    // } elseif ($conn->query("SELECT `gardeid` FROM `teachers` WHERE `id` = '$teacherid'")->fetch_assoc()['gardeid'] == $conn->query("SELECT `gardeid` FROM `students` WHERE `id` = '$studentid'")->fetch_assoc()['gardeid']) {
+    // } elseif ($conn->query("SELECT `gradeid` FROM `teachers` WHERE `id` = '$teacherid'")->fetch_assoc()['gradeid'] == $conn->query("SELECT `gradeid` FROM `students` WHERE `id` = '$studentid'")->fetch_assoc()['gradeid']) {
     //     null;
     // } else {
     //     getout();
     // }
 
-    if (!isadmin() && !($conn->query("SELECT `gardeid` FROM `teachers` WHERE `id` = '$teacherid'")->fetch_assoc()['gardeid'] == $conn->query("SELECT `gardeid` FROM `students` WHERE `id` = '$studentid'")->fetch_assoc()['gardeid'])) {
+    if (!isadmin() && !($conn->query("SELECT `gradeid` FROM `teachers` WHERE `id` = '$teacherid'")->fetch_assoc()['gradeid'] == $conn->query("SELECT `gradeid` FROM `students` WHERE `id` = '$studentid'")->fetch_assoc()['gradeid'])) {
         getout();
     }
 
@@ -45,7 +45,7 @@ if (isset($_POST['studentid']) && isset($_POST['purposeid'])) { //add pass!
         $_SESSION['message'] = 'ошибка, сообщите о ней куда надо, или не надо, по желанию, так';
         redirect('./');
     }
-} else if (isset($_POST['deleteid'])) { //delete pass!
+} else if (isset($_POST['deleteid'])) { //delete pass
 
 
     $deleteid = htmlspecialchars($_POST['deleteid']);
@@ -53,7 +53,7 @@ if (isset($_POST['studentid']) && isset($_POST['purposeid'])) { //add pass!
     if (isadmin()) {
         $conn->query("DELETE FROM `passes` WHERE `studentid` = '$deleteid' AND `date` = '$date'");
         // unset($deleteid);
-    } elseif ($conn->query("SELECT `gardeid` FROM `teachers` WHERE `id` = '$teacherid'")->fetch_assoc()['gardeid'] == $conn->query("SELECT `gardeid` FROM `students` WHERE `id` = '$deleteid'")->fetch_assoc()['gardeid']) {
+    } elseif ($conn->query("SELECT `gradeid` FROM `teachers` WHERE `id` = '$teacherid'")->fetch_assoc()['gradeid'] == $conn->query("SELECT `gradeid` FROM `students` WHERE `id` = '$deleteid'")->fetch_assoc()['gradeid']) {
         // unset($deleteid);
         $conn->query("DELETE FROM `passes` WHERE `studentid` = '$deleteid' AND `date` = '$date'");
     } else {

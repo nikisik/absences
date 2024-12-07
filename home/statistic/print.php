@@ -22,18 +22,18 @@ if (isset($_SESSION['message'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo 'Список отсутствующих на ' . date('d.m.Y'); ?></title>
+    <title><?php echo 'Список отсутствующих на ' . htmlspecialchars($_GET['date']); ?></title>
     <link rel="stylesheet" href="../../assets/home.css">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'> -->
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 </head>
 
 <body>
-    <!-- <svg width='1300' height='1300'> -->
+
 
     <table style='padding:10px;' id='missing'>
         <?php
-        $date = date('Y.m.d');
+        $date = isset($_GET['date']) ? date("Y.m.d", strtotime(htmlspecialchars($_GET['date']))) : date('Y.m.d');
 
         $NumberOfPasses = $conn->query("SELECT COUNT(`id`) FROM `passes` WHERE `date` = '$date';")->fetch_assoc()['COUNT(`id`)'];
         if ($NumberOfPasses == 0) {
@@ -45,7 +45,6 @@ if (isset($_SESSION['message'])) {
         // echo 'Список отсутствующих на ' . $date;
         // echo '</text>';
 
-        $rows = $conn->query("SELECT * FROM `passes` WHERE `date` = '$date' ORDER BY `gradeid`;");
         echo '
         <tr>
         <th>Класс</th>
@@ -53,15 +52,15 @@ if (isset($_SESSION['message'])) {
         <th>Причина</th>
         </tr>';
 
-
-        foreach ($rows as $row) {
-            // $teacherid = $row['teacherid'];
-            // $purposeid = $row['purposeid'];
-            // $gradeid = $conn->query("SELECT `gradeid` FROM `teachers` WHERE `id` = '$teacherid';")->fetch_assoc()['gradeid'];
-
-            // $gradename = $conn->query("SELECT `gradename` FROM `grades` WHERE `id` = '$gradeid';")->fetch_assoc()['gradename'];
-            // $purposename = $conn->query("SELECT `name` FROM `purpose` WHERE `id` = '$purposeid';")->fetch_assoc()['name'];
-            // $name = $conn->query("SELECT `name` FROM `students` WHERE `teacherid` = '$teacherid';")->fetch_assoc()['name'];
+        $allpasses = $conn->query("SELECT * FROM `passes` WHERE `date` = '$date' ORDER BY `gradeid`;");
+        $gradesWithAbsences = $conn->query("SELECT DISTINCT `gradeid` FROM `passes` WHERE `date` = '$date';")->fetch_assoc();
+        $graderows = $conn->query("SELECT * FROM `grades`;");
+        foreach ($graderows as $graderow) {
+            $gradeid = $graderow['id'];
+            if (!in_array($gradeid, ($gradesWithAbsences ?? array()))) {
+                echo 'skipped ' . $gradeid;
+                continue;
+            }
 
 
 
@@ -94,7 +93,7 @@ if (isset($_SESSION['message'])) {
     </table>
     <?php
 
-    // $NumberOfPasses = $conn->query("SELECT COUNT(`id`) FROM `passes` WHERE `date` = '$date';")->fetch_assoc()['COUNT(`id`)'];
+
     if ($NumberOfPasses == 0) {
         echo '-->';
     } else {
@@ -103,7 +102,8 @@ if (isset($_SESSION['message'])) {
         print()
     </script>";
     }
-    echo "Количесво пропусков за сегодня: " . $conn->query("SELECT COUNT(`id`) FROM `passes` WHERE `date` = '$date';")->fetch_assoc()['COUNT(`id`)'];
+    // echo "Количесво пропусков за сегодня: " . $conn->query("SELECT COUNT(`id`) FROM `passes` WHERE `date` = '$date';")->fetch_assoc()['COUNT(`id`)'];
+    echo "Количесво пропусков за сегодня: " . $NumberOfPasses;
     ?>
 
 

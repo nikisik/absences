@@ -7,9 +7,9 @@ const DB_USERNAME = 'root';
 const DB_PASSWORD = '';
 // const DB_HOST = 'localhost';
 // const DB_PORT = '3306';
-// const DB_NAME = 'u3984081_prjct';
-// const DB_USERNAME = 'u3984_2';
-// const DB_PASSWORD = 'WMdqoqR7';
+// const DB_NAME = 'u3984081_schl';
+// const DB_USERNAME = 'u3984_schl';
+// const DB_PASSWORD = 'qFi~hNwO~ePFT~ZdiQ4B*AhTVvvKMw';
 
 
 

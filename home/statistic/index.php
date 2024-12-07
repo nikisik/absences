@@ -103,7 +103,7 @@ if (isset($_SESSION['message'])) {
             echo "<td>" . ($allabsebces == 0 ? '' : $allabsebces) . "</td>"; // Всего пропусков
 
             // ПРИЧИНЫ //
-            $passes = $conn->query("SELECT `purposeid`,`date` FROM `passes` WHERE `studentid` = '$studentid';");
+            $passes = $conn->query("SELECT `purposeid`,`date` FROM `passes` WHERE `studentid` = '$studentid' ORDER BY `date` DESC;");
 
             // КАКОЙ Я КЛЁВЫЙ
             // echo "<td><select ";

@@ -27,7 +27,7 @@ if (isset($_SESSION['message'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home</title>
   <link rel="stylesheet" href="../assets/home.css">
-  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <!-- <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'> -->
   <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 </head>
 
@@ -99,7 +99,8 @@ if (isset($_SESSION['message'])) {
 
 
     if (!isadmin() && $teacherid > 0) {
-      $rows = $conn->query("SELECT * FROM `grades` WHERE `teacherid` = '$teacherid' ORDER BY `gradename`");
+      $gradeid = $conn->query("SELECT gradeid FROM teachers WHERE id = '$teacherid'")->fetch_assoc()['gradeid'];
+      $rows = $conn->query("SELECT * FROM `grades` WHERE `id` = '$gradeid' ORDER BY `gradename`");
     } else if (isadmin() && isset($_SESSION['filter'])) { //фильтрация включена
       $filter = htmlspecialchars($_SESSION['filter']);
       $gradeid = $conn->query("SELECT `id` FROM `grades` WHERE `gradename` = '$filter'")->fetch_assoc()['id'];
