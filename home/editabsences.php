@@ -33,13 +33,13 @@ if (isset($_POST['studentid']) && isset($_POST['purposeid'])) { //add pass!
     // } else {
     //     getout();
     // }
-
-    if (!isadmin() && !($conn->query("SELECT `gradeid` FROM `teachers` WHERE `id` = '$teacherid'")->fetch_assoc()['gradeid'] == $conn->query("SELECT `gradeid` FROM `students` WHERE `id` = '$studentid'")->fetch_assoc()['gradeid'])) {
+    $gradeid = $conn->query("SELECT `gradeid` FROM `students` WHERE `id` = '$studentid'")->fetch_assoc()['gradeid'];
+    if (!isadmin() && !($conn->query("SELECT `gradeid` FROM `teachers` WHERE `id` = '$teacherid'")->fetch_assoc()['gradeid'] == $gradeid)) {
         getout();
     }
 
 
-    if ($conn->query("INSERT INTO `passes`(`studentid`, `purposeid`, `date`) VALUES ('$studentid','$purposeid','$date')") === true) {
+    if ($conn->query("INSERT INTO `passes`(`studentid`, `purposeid`,`gradeid`, `date`) VALUES ('$studentid','$purposeid','$gradeid','$date')") === true) {
         redirect('./');
     } else {
         $_SESSION['message'] = 'ошибка, сообщите о ней куда надо, или не надо, по желанию, так';
@@ -70,7 +70,7 @@ if (isset($_POST['studentid']) && isset($_POST['purposeid'])) { //add pass!
     // $teacherid = $_SESSION['teacherid'];
 }
 
-
+redirect('./');
 // if (empty($name)) {
 //     $_SESSION['message'] = 'пустой name';
 //     redirect('./');

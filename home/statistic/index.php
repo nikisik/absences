@@ -2,9 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/src/helpers.php';
 
-// if (!checkAuth() || !isadmin()) {
-//     redirect('../../src/action/logout.php');
-// }
+
 adminpage();
 
 
@@ -24,7 +22,7 @@ if (isset($_SESSION['message'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Статистика</title>
     <link rel="stylesheet" href="../../assets/home.css">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'> -->
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 </head>
 
@@ -33,7 +31,7 @@ if (isset($_SESSION['message'])) {
 
     <div class="topnav">
         <a href="/../">Пропуски</a>
-        <!-- <a href="../editstudents/">Редактировать учеников</a> -->
+
         <?php
         if (isadmin()) {
             echo "<a class='active' href=''>Статистика</a>";
@@ -42,6 +40,7 @@ if (isset($_SESSION['message'])) {
             echo "<a href='/../../regedit/teachers.php'>Добавить учителя</a>";
             echo "<a href='/../regedit/purposes.php'>Редактировать причины</a>";
             echo "<a href='/../regedit/grades.php'>Редактировать классы</a>";
+            echo "<a href='../editstudents/'>Редактировать учеников</a>";
         }
         ?>
 
@@ -105,12 +104,6 @@ if (isset($_SESSION['message'])) {
             // ПРИЧИНЫ //
             $passes = $conn->query("SELECT `purposeid`,`date` FROM `passes` WHERE `studentid` = '$studentid' ORDER BY `date` DESC;");
 
-            // КАКОЙ Я КЛЁВЫЙ
-            // echo "<td><select ";
-            // if (empty($passes->fetch_assoc())) {
-            //     echo "style= 'pointer-events: none;'";
-            // }
-            // echo ">";
 
             echo "<td><select class='statisticselect' " . (empty($passes->fetch_assoc()) ? "style='pointer-events: none;' name='list'" : "") . ">";
 
@@ -145,34 +138,28 @@ if (isset($_SESSION['message'])) {
         ?>
     </table>
 
-    <button onclick="location.href = 'print.php';" style="
-    /* position: absolute; */
-    margin-top: 10px;
-    width: 100%;
-    height: 50px;
-    border: none;
-    outline: none;
-    color: rgb(0,0,0);
-    border-radius: 5px;
-    font-size: 17px;
-    text-align: center;
-    border: 2px solid rgba(0,0,0, 0.2);
-    background: rgba(157, 0, 172, .3);;
-    cursor: pointer;">
-        Перейти на страницу для распечатки
-    </button>
+    <!-- ВОТ тут очень надо сделать модальное окно с формой чтоб можно было выставлять $_GET['date'], например 'print.php?date=06.12.2024' -->
+    <!-- или не надо -->
+    <div id="printformdiv">
+        <div>
+            <form>
+                <!-- <select name="" id="date">
+                    <option>
+                        выбор даты
+                    </option>
+                </select> -->
+            </form>
+        </div>
+
+        <button onclick="location.href = './print.php';" id="printbutton" title="Страница для распечатки">Перейти на страницу для распечатки</button>
+    </div>
+
+
 
 
 
 
     <?php
-    // global $dates;
-    // $dates = $conn->query("SELECT DISTINCT `date` FROM `passes` ORDER BY `date`;");
-
-    // if (empty($dates->fetch_assoc())) {
-    //     echo "<!-- \n";
-    // }
-    // var_dump($dates->fetch_assoc());
     global $existrec;
     $existrec = null !== $conn->query("SELECT `id` FROM `passes` LIMIT 1")->fetch_assoc();
     // var_dump($existrec);

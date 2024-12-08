@@ -1,18 +1,8 @@
 <?php
-
 require_once $_SERVER['DOCUMENT_ROOT'] . '/src/helpers.php';
-
-// if (!checkAuth() || !isadmin()) {
-//     redirect('../../src/action/logout.php');
-// }
 adminpage();
 
 
-// $teacherid = $_SESSION['teacherid'];
-if (isset($_SESSION['message'])) {
-    echo $_SESSION['message'];
-    unset($_SESSION['message']);
-}
 ?>
 
 
@@ -22,87 +12,87 @@ if (isset($_SESSION['message'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo 'Список отсутствующих на ' . htmlspecialchars($_GET['date']); ?></title>
+    <title><?php echo 'Список отсутствующих на ' . htmlspecialchars($_GET['date'] ?? date('d.m.Y')); ?></title>
     <link rel="stylesheet" href="../../assets/home.css">
-    <!-- <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'> -->
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 </head>
 
 <body>
 
 
-    <table style='padding:10px;' id='missing'>
-        <?php
-        $date = isset($_GET['date']) ? date("Y.m.d", strtotime(htmlspecialchars($_GET['date']))) : date('Y.m.d');
+    <?php #СКРЫВАПЕМ МАКЕТ ТАБЛИЦЫ ЕСЛИ ПРОПУСКОВ НЕТ
+    $date = isset($_GET['date']) ? date("Y.m.d", strtotime(htmlspecialchars($_GET['date']))) : date('Y.m.d');
 
-        $NumberOfPasses = $conn->query("SELECT COUNT(`id`) FROM `passes` WHERE `date` = '$date';")->fetch_assoc()['COUNT(`id`)'];
-        if ($NumberOfPasses == 0) {
-            echo '<!--';
-        }
-
-
-        // echo '<text y="20" font-size="15" text-anchor="left" fill="black">';
-        // echo 'Список отсутствующих на ' . $date;
-        // echo '</text>';
-
-        echo '
-        <tr>
-        <th>Класс</th>
-        <th>Имя</th>
-        <th>Причина</th>
-        </tr>';
-
-        $allpasses = $conn->query("SELECT * FROM `passes` WHERE `date` = '$date' ORDER BY `gradeid`;");
-        $gradesWithAbsences = $conn->query("SELECT DISTINCT `gradeid` FROM `passes` WHERE `date` = '$date';")->fetch_assoc();
-        $graderows = $conn->query("SELECT * FROM `grades`;");
-        foreach ($graderows as $graderow) {
-            $gradeid = $graderow['id'];
-            if (!in_array($gradeid, ($gradesWithAbsences ?? array()))) {
-                echo 'skipped ' . $gradeid;
-                continue;
-            }
-
-
-
-            $gradeid = $row['gradeid'];
-            $studentid = $row['studentid'];
-            $purposeid = $row['purposeid'];
-            $gradename = $conn->query("SELECT `gradename` FROM `grades` WHERE `id` = '$gradeid';")->fetch_assoc()['gradename'];
-            $name = $conn->query("SELECT `name` FROM `students` WHERE `id` = '$studentid';")->fetch_assoc()['name'];
-            $purposename = $conn->query("SELECT `name` FROM `purpose` WHERE `id` = '$purposeid';")->fetch_assoc()['name'];
-
-
-
-            echo '<tr>';
-            echo '<td>' . $gradename . '</td>';
-            echo '<td>' . $name . '</td>';
-            echo '<td>' . $purposename . '</td>';
-            echo '</tr>';
-
-
-            // var_dump($teacherid);
-            // var_dump($purposeid);
-            // var_dump($gradeid);
-            // var_dump($gradename);
-            // var_dump($purposename);
-            // var_dump($name);
-        }
-
-
-        ?>
-    </table>
-    <?php
-
-
+    $NumberOfPasses = $conn->query("SELECT COUNT(`id`) FROM `passes` WHERE `date` = '$date';")->fetch_assoc()['COUNT(`id`)'];
     if ($NumberOfPasses == 0) {
-        echo '-->';
-    } else {
-        echo "
-    <script>
-        print()
-    </script>";
+        echo '<!--';
+    } #СКРЫВАПЕМ МАКЕТ ТАБЛИЦЫ ЕСЛИ ПРОПУСКОВ НЕТ
+    ?>
+
+
+
+
+
+    <?php
+    echo "
+    <table style='padding:10px;' id='missing'>
+        <tr>
+            <th>Класс</th>
+            <th>Имя</th>
+            <th>Причина</th>
+        </tr>";
+
+
+
+
+
+
+    $allpurposes = array();
+    foreach ($conn->query("SELECT `id`,`name` FROM `purpose` ORDER BY `id`") as $allpurposesrow) {
+        $allpurposes = $allpurposes + array($allpurposesrow['id'] => $allpurposesrow['name']);
+        // var_dump(array($allpurposesrow['id'] => $allpurposesrow['name']));
+        // echo '<br>';
     }
-    // echo "Количесво пропусков за сегодня: " . $conn->query("SELECT COUNT(`id`) FROM `passes` WHERE `date` = '$date';")->fetch_assoc()['COUNT(`id`)'];
+    // echo '<br>';
+    // var_dump($allpurposes);
+
+    foreach ($conn->query("SELECT * FROM `grades` ORDER BY `gradename`") as $grade) {
+        $gradename = $grade['gradename'];
+        $gradeid = $grade['id'];
+        $passes = $conn->query("SELECT * FROM `passes` WHERE `gradeid` = '$gradeid' AND `date` = '$date'");
+        foreach ($passes as $pass) {
+            $studentid = $pass['studentid'];
+            $name = $conn->query("SELECT `name` FROM `students` WHERE `id` = $studentid")->fetch_assoc()['name'];
+
+            $purpose = $allpurposes[$pass["purposeid"]];
+
+            echo "
+            <tr>
+                <th>$gradename</th>
+                <th>$name</th>
+                <th>$purpose</th>
+            </tr>";
+        }
+    }
+
+
+    echo '</table>';
+    ?>
+
+
+
+
+
+    <?php
+    if ($NumberOfPasses == 0) { #СКРЫВАПЕМ МАКЕТ ТАБЛИЦЫ ЕСЛИ ПРОПУСКОВ НЕТ
+        echo '-->';
+    }  #СКРЫВАПЕМ МАКЕТ ТАБЛИЦЫ ЕСЛИ ПРОПУСКОВ НЕТ
+    else {
+        echo "
+        <script>
+            print();
+        </script>"; #print, всё понятно??????
+    }
     echo "Количесво пропусков за сегодня: " . $NumberOfPasses;
     ?>
 
