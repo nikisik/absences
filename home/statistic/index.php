@@ -21,8 +21,7 @@ if (isset($_SESSION['message'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Статистика</title>
-    <link rel="stylesheet" href="../../assets/home.css">
-    <!-- <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'> -->
+    <link rel="stylesheet" href="/assets/home.css">
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 </head>
 
@@ -30,23 +29,18 @@ if (isset($_SESSION['message'])) {
 
 
     <div class="topnav">
-        <a href="/../">Пропуски</a>
+        <a href="/home/">Пропуски</a>
+        <a class="active" href='/home/statistic/'>Статистика</a>
+        <a href='/regedit/teachers/'>Добавить учителя</a>
+        <a href='/regedit/students/'>Добавить ученика</a>
+        <a href='/regedit/purposes/'>Редактировать причины</a>
+        <a href='/regedit/grades/'>Редактировать классы</a>
+        <!-- <a href='/regedit/editstudents/'>Редактировать учеников</a> -->
 
-        <?php
-        if (isadmin()) {
-            echo "<a class='active' href=''>Статистика</a>";
 
-            echo "<a href='/../../regedit/students.php'>Добавить ученика</a>";
-            echo "<a href='/../../regedit/teachers.php'>Добавить учителя</a>";
-            echo "<a href='/../regedit/purposes.php'>Редактировать причины</a>";
-            echo "<a href='/../regedit/grades.php'>Редактировать классы</a>";
-            echo "<a href='../editstudents/'>Редактировать учеников</a>";
-        }
-        ?>
 
-        <!--<a href="#about">About</a> -->
         <a href="/src/actions/logout.php" id="logoutbtn">Выйти из аккаунта</a>
-        <!-- <a href="/account.php" id="logoutbtn"><i class='bx bxs-user-circle bx-sm' style="position: absolute; transform: translateX(-25%);"></i>. .</a> -->
+
     </div>
 
 
@@ -151,7 +145,7 @@ if (isset($_SESSION['message'])) {
             </form>
         </div>
 
-        <button onclick="location.href = './print.php';" id="printbutton" title="Страница для распечатки">Перейти на страницу для распечатки</button>
+        <button onclick="location.href = './print/';" id="printbutton" title="Страница для распечатки">Перейти на страницу для распечатки</button>
     </div>
 
 

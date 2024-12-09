@@ -26,8 +26,7 @@ if (isset($_SESSION['message'])) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home</title>
-  <link rel="stylesheet" href="../assets/home.css">
-  <!-- <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'> -->
+  <link rel="stylesheet" href="/assets/home.css">
   <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 </head>
 
@@ -39,20 +38,25 @@ if (isset($_SESSION['message'])) {
     <!-- <a href="./editstudents/">Редактировать учеников</a> -->
     <?php
     if (isadmin()) {
-      echo "<a href='./statistic/'>Статистика</a>";
-
-
-      echo "<a href='/../regedit/students.php'>Добавить ученика</a>";
-      echo "<a href='/../regedit/teachers.php'>Добавить учителя</a>";
-      echo "<a href='/../regedit/purposes.php'>Редактировать причины</a>";
-      echo "<a href='/../regedit/grades.php'>Редактировать классы</a>";
+      echo "
+      
+      <a href='./statistic/'>Статистика</a>
+      <a href='/regedit/teachers/'>Добавить учителя</a>
+      <a href='/regedit/students'>Добавить ученика</a>
+      <a href='/regedit/purposes'>Редактировать причины</a>
+      <a href='/regedit/grades.php'>Редактировать классы</a>
+      
+      ";
+      // echo "<a href='/regedit/editstudents/'>Редактировать учеников</a>";
     }
     ?>
 
-    <!--<a href="#about">About</a> -->
+
     <a href="/src/actions/logout.php" id="logoutbtn">Выйти из аккаунта</a>
-    <!-- <a href="/account.php" id="logoutbtn"><i class='bx bxs-user-circle bx-sm' style="position: absolute; transform: translateX(-25%);"></i>. .</a> -->
+
   </div>
+
+
 
   <table style='padding:10px;' id='missing'>
     <tr>
@@ -93,7 +97,7 @@ if (isset($_SESSION['message'])) {
 
 
 
-
+    // line 166 select purposes
     $purposes = $conn->query("SELECT * FROM `purpose`");
 
 
@@ -103,22 +107,24 @@ if (isset($_SESSION['message'])) {
       $rows = $conn->query("SELECT * FROM `grades` WHERE `id` = '$gradeid' ORDER BY `gradename`");
     } else if (isadmin() && isset($_SESSION['filter'])) { //фильтрация включена
       $filter = htmlspecialchars($_SESSION['filter']);
-      $gradeid = $conn->query("SELECT `id` FROM `grades` WHERE `gradename` = '$filter'")->fetch_assoc()['id'];
+      $gradeid = $conn->query("SELECT `id` FROM `grades` WHERE `gradename` = '$filter'")->fetch_assoc()['id'] ?? null;
       $rows = $conn->query("SELECT * FROM `grades` WHERE `id` = '$gradeid'");
       // unset($_GET['filter']);
-      if ($filter == '00') {   //все классы
+      if ($filter == '00') {   //фильтр на все классы
         $rows = $conn->query("SELECT * FROM `grades` ORDER BY `gradename`");
       }
-    } else if (isadmin() && !isset($_SESSION['filter'])) {  //все классы
+    } else if (isadmin() && !isset($_SESSION['filter'])) {  //филтра нет, выводим все классы
       $rows = $conn->query("SELECT * FROM `grades` ORDER BY `gradename`");
     }
 
     if (isadmin()) { //filter
-      $gradenames = $conn->query("SELECT `gradename` FROM `grades` WHERE 1");
+      $gradenames = $conn->query("SELECT `gradename` FROM `grades` ORDER BY `gradename`");
+      echo '<div class="topnav">';
       foreach ($gradenames as $gradename) {
         $gradename = $gradename['gradename'];
-        echo "<a style='margin-right: 20px' href='./?filter=$gradename'>" . (($gradename != '00') ? $gradename : 'все*') . "</a>";
+        echo "<a style='padding:5px;' href='./?filter=$gradename'>" . (($gradename != '00') ? $gradename : 'Все') . "</a>";
       }
+      echo "</div>";
     }
 
 
@@ -158,7 +164,7 @@ if (isset($_SESSION['message'])) {
         if (!isset($purposeid)) {
           echo "<input type='hidden' name='studentid' value='$studentid'>";
           echo "<select name='purposeid'>";
-          // line 79 select purposes
+          // line 101 select purposes
           foreach ($purposes as $purpose) {
             $purposeid = $purpose['id'];
             $purposename = $purpose['name'];

@@ -1,11 +1,11 @@
 <?php
 
-// const DB_HOST = '192.168.1.123';
-// const DB_PORT = '3306';
-// const DB_NAME = 'absences';
-// const DB_USERNAME = 'root';
-// const DB_PASSWORD = '';
-require_once 'dbpassword.php';
+const DB_HOST = '192.168.1.123';
+const DB_PORT = '3306';
+const DB_NAME = 'absences';
+const DB_USERNAME = 'root';
+const DB_PASSWORD = '';
+// require_once 'dbpassword.php';
 
 
 

@@ -1,7 +1,7 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/src/helpers.php';
-userpage();
+adminpage();
 // adminpage();
 // if (!checkAuth()) {
 //     redirect('/');
@@ -32,14 +32,11 @@ if (isset($_SESSION['message'])) {
 
     <div class="topnav">
         <a href="../">Пропуски</a>
+        <a href='../statistic/'>Статистика</a>
         <a class="active" href="">Редактировать учеников</a>
-        <?php
-        if (isadmin()) {
-            echo "<a href='../statistic/'>Статистика</a>";
-            echo "<a href='/../../regedit/students.php'>Добавить ученика</a>";
-            echo "<a href='/../../regedit/teachers.php'>Добавить учителя</a>";
-        }
-        ?>
+        <a href='/../../regedit/students.php'>Добавить ученика</a>
+        <a href='/../../regedit/teachers.php'>Добавить учителя</a>
+
 
         <a href="/src/actions/logout.php" id="logoutbtn">Выйти из аккаунта</a>
     </div>

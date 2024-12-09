@@ -13,7 +13,7 @@ adminpage();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo 'Список отсутствующих на ' . htmlspecialchars($_GET['date'] ?? date('d.m.Y')); ?></title>
-    <link rel="stylesheet" href="../../assets/home.css">
+    <link rel="stylesheet" href="/assets/home.css">
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 </head>
 
