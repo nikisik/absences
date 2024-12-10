@@ -42,9 +42,9 @@ if (isset($_SESSION['message'])) {
       
       <a href='./statistic/'>Статистика</a>
       <a href='/regedit/teachers/'>Добавить учителя</a>
-      <a href='/regedit/students'>Добавить ученика</a>
-      <a href='/regedit/purposes'>Редактировать причины</a>
-      <a href='/regedit/grades.php'>Редактировать классы</a>
+      <a href='/regedit/students/'>Добавить ученика</a>
+      <a href='/regedit/purposes/'>Редактировать причины</a>
+      <a href='/regedit/grades/'>Редактировать классы</a>
       
       ";
       // echo "<a href='/regedit/editstudents/'>Редактировать учеников</a>";
@@ -99,7 +99,10 @@ if (isset($_SESSION['message'])) {
 
     // line 166 select purposes
     $purposes = $conn->query("SELECT * FROM `purpose`");
-
+    $allpurposes = array();
+    foreach ($conn->query("SELECT `id`,`name` FROM `purpose` ORDER BY `id`") as $allpurposesrow) {
+      $allpurposes = $allpurposes + array($allpurposesrow['id'] => $allpurposesrow['name']);
+    }
 
 
     if (!isadmin() && $teacherid > 0) {
@@ -113,7 +116,7 @@ if (isset($_SESSION['message'])) {
       if ($filter == '00') {   //фильтр на все классы
         $rows = $conn->query("SELECT * FROM `grades` ORDER BY `gradename`");
       }
-    } else if (isadmin() && !isset($_SESSION['filter'])) {  //филтра нет, выводим все классы
+    } else if (isadmin() && !isset($_SESSION['filter'])) {  //фильтра нет, выводим все классы
       $rows = $conn->query("SELECT * FROM `grades` ORDER BY `gradename`");
     }
 
@@ -147,7 +150,7 @@ if (isset($_SESSION['message'])) {
         //   $purpose = '';
         // }
         $purposeid = $conn->query("SELECT `purposeid` FROM `passes` WHERE `studentid` = '$studentid' AND `date` = '$date'")->fetch_assoc()['purposeid'] ?? null;
-        $purpose = $purposeid ? $conn->query("SELECT `name` FROM `purpose` WHERE `id` = '$purposeid'")->fetch_assoc()['name'] : '';
+        $purpose = $purposeid ? $allpurposes[$purposeid] : '';
 
 
 

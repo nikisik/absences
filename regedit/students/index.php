@@ -36,7 +36,7 @@ adminpage();
 
     <div id="flexbox">
         <form method="POST" action="/regedit/students/students.php">
-            <input type="text" name="name" placeholder="name" require autofocus><br>
+            <input type="text" name="name" placeholder="Имя ученика" require autofocus><br>
             <?php
 
 

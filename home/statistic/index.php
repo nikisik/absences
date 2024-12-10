@@ -57,77 +57,65 @@ if (isset($_SESSION['message'])) {
         </tr>
         <?php
 
-        if (isadmin()) {
-            $rows = $conn->query("SELECT * FROM `students` ORDER BY `gradeid`,`name`");
-        } else {
-            $rows = $conn->query("SELECT * FROM `students` WHERE `teacherid` = '$teacherid' ORDER BY `name`");
-        }
-
-        foreach ($rows as $row) {
-
-            $gradeid = $row['gradeid'];
-            $gradename = $conn->query("SELECT `gradename` FROM `grades` WHERE `id` = '$gradeid';")->fetch_assoc()['gradename'];
-            $studentid = $row['id'];
-            $studentname = $row['name'];
-            $date = date('Y.m.d');
-            $allabsebces = count($conn->query("SELECT `id` FROM `passes` WHERE `studentid` = '$studentid';")->fetch_all() ?? array());
-            $absebcespurposeids = $conn->query("SELECT `purposeid` FROM `passes` WHERE `studentid` = '$studentid';")->fetch_all() ?? array();
-
-            // $ismissingtoday = isset($conn->query("SELECT `date` FROM `missings` WHERE `studentid` = '$studentid' AND `date` = '$date'")->fetch_assoc()['date']);
-            // if ($ismissingtoday) {
-            //     $missing = 'Н';
-            //     $purposeid = $conn->query("SELECT `purposeid` FROM `missings` WHERE `studentid` = '$studentid' AND `date` = '$date'")->fetch_assoc()['purposeid'];
-            //     $purpose = $conn->query("SELECT `name` FROM `purpose` WHERE `id` = '$purposeid'")->fetch_assoc()['name'];
-            // } else {
-            //     $missing = ''; // +++++++
-            //     $purpose = '';
-            // }
-
-            // var_dump($ismissingtoday);
-            // var_dump($missing);
-            // echo "<br>$studentname: ";
-            // var_dump($conn->query("SELECT `id` FROM `missings` WHERE `studentid` = '$studentid';")->fetch_all() ?? array());
-
-            echo "<tr>";
+        // $rows = $conn->query("SELECT * FROM `students` ORDER BY `gradeid`,`name`");
 
 
-            echo "<td>" . $gradename . "</td>";
-            echo "<td>" . $studentname . "</td>";
-            echo "<td>" . ($allabsebces == 0 ? '' : $allabsebces) . "</td>"; // Всего пропусков
 
-            // ПРИЧИНЫ //
-            $passes = $conn->query("SELECT `purposeid`,`date` FROM `passes` WHERE `studentid` = '$studentid' ORDER BY `date` DESC;");
+        foreach ($conn->query("SELECT * FROM `grades` ORDER BY `gradename`") as $grade) {
+            $gradeid = $grade['id'];
+            $gradename = $grade['gradename'];
+            $rows = $conn->query("SELECT * FROM `students` WHERE `gradeid` = '$gradeid' ORDER BY `name`");
+            $teachername = $conn->query("SELECT `name` FROM `teachers` WHERE `gradeid` = '$gradeid';")->fetch_assoc()['name'] ?? 'Учителя для этого класса нет, добавьте'; //теперь этот запрос делается 1 раз вместо ~25
+            foreach ($rows as $row) {
 
 
-            echo "<td><select class='statisticselect' " . (empty($passes->fetch_assoc()) ? "style='pointer-events: none;' name='list'" : "") . ">";
+                $studentid = $row['id'];
+                $studentname = $row['name'];
+                $date = date('Y.m.d');
+                $allabsebces = count($conn->query("SELECT `id` FROM `passes` WHERE `studentid` = '$studentid';")->fetch_all() ?? array());
+                // $absebcespurposeids = $conn->query("SELECT `purposeid` FROM `passes` WHERE `studentid` = '$studentid';")->fetch_all() ?? array(); //хахахах оно нигде не использовалось
 
-            foreach ($passes as $pass) {
-                $purposeid =  $pass['purposeid'];
-                $purposename = $conn->query("SELECT `name` FROM `purpose` WHERE `id` = '$purposeid';")->fetch_assoc()['name'];
-                $passdate = $pass['date'];
-                echo "<option> $purposename, $passdate </option>";
+
+                echo "<tr>";
+
+
+                echo "<td>" . $gradename . "</td>";
+                echo "<td>" . $studentname . "</td>";
+                echo "<td>" . ($allabsebces ? $allabsebces : '') . "</td>"; // Всего пропусков
+
+                // ПРИЧИНЫ //
+                $passes = $conn->query("SELECT `purposeid`,`date` FROM `passes` WHERE `studentid` = '$studentid' ORDER BY `date` DESC;");
+
+
+                echo "<td><select class='statisticselect' " . (empty($passes->fetch_assoc()) ? "style='pointer-events: none;' name='unclickableselect'" : "") . ">";
+
+                foreach ($passes as $pass) {
+                    $purposeid =  $pass['purposeid'];
+                    $purposename = $conn->query("SELECT `name` FROM `purpose` WHERE `id` = '$purposeid';")->fetch_assoc()['name'];
+                    $passdate = date_format(date_create_from_format("Y.m.d", $pass['date']), "d.m.Y"); //еле справился, мне нравится
+                    echo "<option> $purposename, $passdate </option>";
+                }
+                echo "</select></td>";
+
+
+
+
+                echo "<td>"; //teacher's name
+
+                echo ($teachername);
+
+                echo "</td>";
+
+                echo "</tr>";
+                // echo "<form method=\"POST\" action=\"./addmissings.php\">";
+
+
+
+                // echo $row['id'];
+                // echo $row['name'];
+                // echo $row['teacherid'];
+                // echo $row['gradeid'];
             }
-            echo "</select></td>";
-
-
-
-
-            echo "<td>";
-
-            echo $conn->query("SELECT `name` FROM `teachers` WHERE `gradeid` = '$gradeid';")->fetch_assoc()['name'];
-
-
-            echo "</td>";
-
-            echo "</tr>";
-            // echo "<form method=\"POST\" action=\"./addmissings.php\">";
-
-
-
-            // echo $row['id'];
-            // echo $row['name'];
-            // echo $row['teacherid'];
-            // echo $row['gradeid'];
         }
         ?>
     </table>

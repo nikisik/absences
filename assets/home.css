@@ -1,3 +1,7 @@
+body {
+    min-width: 1100px;
+}
+
 .topnav {
     background-color: #333;
     overflow: hidden;
@@ -128,7 +132,7 @@ select {
     border: 2px solid rgba(0, 0, 0, 0.2);
     background: rgba(157, 0, 172, .3);
     cursor: pointer;
-    ;
+    min-width: 350px;
 }
 
 #printformdiv {

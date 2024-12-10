@@ -50,11 +50,7 @@ adminpage();
     $allpurposes = array();
     foreach ($conn->query("SELECT `id`,`name` FROM `purpose` ORDER BY `id`") as $allpurposesrow) {
         $allpurposes = $allpurposes + array($allpurposesrow['id'] => $allpurposesrow['name']);
-        // var_dump(array($allpurposesrow['id'] => $allpurposesrow['name']));
-        // echo '<br>';
     }
-    // echo '<br>';
-    // var_dump($allpurposes);
 
     foreach ($conn->query("SELECT * FROM `grades` ORDER BY `gradename`") as $grade) {
         $gradename = $grade['gradename'];
@@ -62,7 +58,7 @@ adminpage();
         $passes = $conn->query("SELECT * FROM `passes` WHERE `gradeid` = '$gradeid' AND `date` = '$date'");
         foreach ($passes as $pass) {
             $studentid = $pass['studentid'];
-            $name = $conn->query("SELECT `name` FROM `students` WHERE `id` = $studentid")->fetch_assoc()['name'];
+            $name = $conn->query("SELECT `name` FROM `students` WHERE `id` = $studentid")->fetch_assoc()['name'] ?? 'ученик удалён';
 
             $purpose = $allpurposes[$pass["purposeid"]];
 
