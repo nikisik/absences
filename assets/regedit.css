@@ -41,6 +41,19 @@ body {
     /* border-width: 5px; */
 }
 
+.defaultbox .change {
+    width: 180px;
+    margin: 5px 0px 0px;
+    height: 25px;
+
+    border-radius: 3px;
+}
+
+.defaultbox #deletebutton {
+    background-color: hsl(346, 100%, 82%);
+    border: 2px solid #ff9fb7;
+}
+
 /* form {
     margin-top: 150px;
 } */

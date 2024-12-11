@@ -34,18 +34,18 @@ adminpage();
         <a href="/src/actions/logout.php" id="logoutbtn">Выйти из аккаунта</a>
     </div>
 
-    <div style='height:400px;float:right;'>
-        <div class='defaultbox' style='float:right;'>
-            <form action="/regedit/grades/grades.php" method="POST">
-                <h3>Добавить класс</h3>
-                <input type="text" name='addgrade' placeholder=" ex.: 1А, max. 3 symb." style="margin: 0;" <?php echo ($_SESSION['addedgrade'] ?? false) ? 'autofocus' : '';
-                                                                                                            unset($_SESSION['addedgrade']); ?>>
-                <br>
-                <input type="submit" value="Добавить">
-            </form>
-        </div>
+    <!-- <div style='height:400px;float:right;'> -->
+    <div class='defaultbox' style='float:right;'>
+        <form action="/regedit/grades/grades.php" method="POST">
+            <h3>Добавить класс</h3>
+            <input type="text" name='addgrade' placeholder=" e.g.: 1А, max. 3 symb." style="margin: 0;" <?php echo ($_SESSION['addedgrade'] ?? false) ? 'autofocus' : '';
+                                                                                                        unset($_SESSION['addedgrade']); ?>>
+            <br>
+            <input type="submit" value="Добавить">
+        </form>
     </div>
-    <h3 style="width: 100%;">Изменить классы</h3><br>
+    <!-- </div> -->
+    <h2 style="width: 100%;">Изменить классы</h2>
     <div id="flexbox">
         <?php
         $rows = $conn->query("SELECT * FROM `grades` ORDER BY `id`");
@@ -81,16 +81,13 @@ adminpage();
 
 
 
-    <?php //DEBUG
-
+    <?php
 
     if (isset($_SESSION['message'])) {
         echo $_SESSION['message'];
         unset($_SESSION['message']);
     }
     userinfo();
-
-    // var_dump();
 
     ?>
     </form>

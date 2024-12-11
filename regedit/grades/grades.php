@@ -7,7 +7,7 @@ if (isset($_POST['id']) && isset($_POST['newgradename'])) {
     $id = htmlspecialchars($_POST['id']) ?? null;
     $newgradename = htmlspecialchars($_POST['newgradename']) ?? null;
     if (strlen($newgradename) > 4 || strlen($newgradename) < 2) {
-        $_SESSION['message'] = "<div id='message'>НАЗВАНИЕ ДОЖНО БЫТЬ ОТ 2-УХ ДО 3-ЁХ СИМВОЛОВ ВКЛЮЧИТЕЛЬНО(12),$id,$newgradename,$addgradename,$deleteid</div>";
+        $_SESSION['message'] = "<div id='message'>НАЗВАНИЕ ДОЛЖНО БЫТЬ ОТ 2-УХ ДО 3-ЁХ СИМВОЛОВ ВКЛЮЧИТЕЛЬНО</div>";
         redirect('/regedit/grades/');
     } else {
         $gradename = $conn->query("SELECT `gradename` FROM `grades` WHERE `id` = '$id'")->fetch_assoc()['gradename'];
@@ -22,7 +22,7 @@ if (isset($_POST['id']) && isset($_POST['newgradename'])) {
 } else if (isset($_POST['addgrade'])) {
     $addgradename = htmlspecialchars($_POST['addgrade']) ?? null;
     if (strlen($addgradename) > 4 || strlen($addgradename) < 2) {
-        $_SESSION['message'] = "<div id='message'>НАЗВАНИЕ ДОЖНО БЫТЬ ОТ 2-УХ ДО 3-ЁХ СИМВОЛОВ ВКЛЮЧИТЕЛЬНО(26)</div>";
+        $_SESSION['message'] = "<div id='message'>НАЗВАНИЕ ДОЛЖНО БЫТЬ ОТ 2-УХ ДО 3-ЁХ СИМВОЛОВ ВКЛЮЧИТЕЛЬНО</div>";
         redirect('/regedit/grades/');
     } else if ($conn->query("INSERT INTO `grades`(`gradename`) VALUES ('$addgradename')") === True) {
         $_SESSION['message'] = "<div id='message'>Класс $addgradename был добавлен</div>";
