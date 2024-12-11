@@ -38,16 +38,17 @@ adminpage();
         <div class='defaultbox' style='float:right;'>
             <form action="/regedit/grades/grades.php" method="POST">
                 <h3>Добавить класс</h3>
-                <input type="text" name='addgrade' placeholder=" ex.: 1А, max. 3 symb." style="margin: 0;">
+                <input type="text" name='addgrade' placeholder=" ex.: 1А, max. 3 symb." style="margin: 0;" <?php echo ($_SESSION['addedgrade'] ?? false) ? 'autofocus' : '';
+                                                                                                            unset($_SESSION['addedgrade']); ?>>
                 <br>
-                <input type="submit">
+                <input type="submit" value="Добавить">
             </form>
         </div>
     </div>
     <h3 style="width: 100%;">Изменить классы</h3><br>
     <div id="flexbox">
         <?php
-        $rows = $conn->query("SELECT * FROM `grades` ORDER BY `gradename`");
+        $rows = $conn->query("SELECT * FROM `grades` ORDER BY `id`");
         foreach ($rows as  $row) {
             $gradename = $row['gradename'];
             if ($gradename == '00') {
@@ -57,14 +58,14 @@ adminpage();
             echo "
             <div class='defaultbox'>
                 <form action='/regedit/grades/grades.php' method='POST'>
-                <input type='hidden' value='$id'>
+                <input type='hidden' value='$id' name='id'>
                     $gradename<br>
                     <input type='text' name='newgradename' style='width:50px; margin:0; height:25px; color:#555;' value='$gradename'><br>
                     <input type='submit' value='Изм.'style='width:50px; margin:5px 0px 0px; height:25px;' title='Изменить название класса'>
                 </form>
 
                 <form action='/regedit/grades/grades.php' method='POST'>
-                    <input type='hidden' value='$id'>
+                    <input type='hidden' value='$id' name='deleteid'>
                     <input type='submit' value='Удал.'style='width:50px; margin:5px 0px 0px; height:25px;' title='Удалить класс. Возможно только тогда, когда ни одному ученику не присовен id этого класса'>
                 </form>
             </div>";
@@ -83,11 +84,11 @@ adminpage();
     <?php //DEBUG
 
 
-    userinfo();
     if (isset($_SESSION['message'])) {
         echo $_SESSION['message'];
         unset($_SESSION['message']);
     }
+    userinfo();
 
     // var_dump();
 

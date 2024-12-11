@@ -2,12 +2,29 @@ body {
     margin: 0;
 }
 
+#message {
+    animation: blink 200ms alternate infinite;
+    font-weight: 700;
+}
+
+@keyframes blink {
+    from {
+        color: cornflowerblue;
+    }
+
+    to {
+        color: crimson;
+    }
+}
+
 #flexbox {
     display: flex;
+    flex-wrap: wrap;
     /* justify-content: center; */
-    align-items: center;
+    /* justify-content: center; */
+    /* align-items: center; */
     /* height: 100%; */
-    min-width: 450px;
+    /* min-width: 450px; */
     max-width: 100%;
     /* background-color: #fce8ff; */
 
