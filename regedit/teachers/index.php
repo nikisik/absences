@@ -42,7 +42,7 @@ adminpage();
     </div>
 
 
-    <div id="flexbox">
+    <div style='height:400px;float:right;'>
         <form method="POST" action="./teachers.php">
             <input type="text" name="login" placeholder="login" require><br>
             <input type="text" name="password" placeholder="password" require><br>
@@ -73,6 +73,30 @@ adminpage();
             ?>
         </form>
     </div>
+
+
+    <div id="flexbox">
+        <?php
+        $teachers = $conn->query("SELECT * FROM `teachers` ORDER BY `name`");
+
+        foreach ($teachers as $teacher) {
+            $name = $teacher['name'];
+            $login = $teacher['login'];
+
+            echo "
+                <div class='defaultbox' >
+                    <form method='POST' action='./teachers.php'>
+                        $name<br>
+                        $login
+
+                    </form>
+                </div>
+                ";
+        }
+
+        ?>
+    </div>
+
 </body>
 
 </html>

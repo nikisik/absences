@@ -41,7 +41,7 @@ adminpage();
         </div>
     </div> <!-- Добавить причину -->
 
-    <h2 style="width: 100%;">Изменить причины</h2>
+    <!-- <h2 style="width: 100%;">Изменить причины</h2> -->
     <div id="flexbox">
         <?php
 
@@ -57,7 +57,7 @@ adminpage();
                 <input type='hidden' value='$id' name='id'>
                     $gradename
                     <!--$isusedanywhere--!>
-                    <input type='text' name='newpurposename' style='color:#777;' class='change' value='$gradename'>
+                    <input id='urodskiipadding' type='text' name='newpurposename' style='color:#777;' class='change' value='$gradename'>
                     <input type='submit' value='Изменить причину' class='change' title='Изменить причину. Возможно только тогда, когда нет ни одного пропуска с этой причиной'>
                 </form>
 

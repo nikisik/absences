@@ -75,26 +75,6 @@ if (isset($_SESSION['message'])) {
 
 
 
-    // $rows = $conn->query("SELECT `id`, `name`, `teacherid`, `gradeid` FROM `students` WHERE `teacherid` = '$teacherid' ORDER BY `name`");
-    // if (isadmin()) {
-    //   $rows = $conn->query("SELECT `id`, `name`, `teacherid`, `gradeid` FROM `students` ORDER BY `gradeid`,`name`");
-    // }
-    // foreach ($rows as $row) {
-    //   $gradeid = $row['gradeid'];
-    //   $gradename = $conn->query("SELECT `gradename` FROM `grades` WHERE `id` = '$gradeid';")->fetch_assoc()['gradename'];
-    //   $studentid = $row['id'];
-    //   $studentname = $row['name'];
-    //   $date = date('Y.m.d');
-    //   $ismissingtoday = isset($conn->query("SELECT `date` FROM `missings` WHERE `studentid` = '$studentid' AND `date` = '$date'")->fetch_assoc()['date']);
-    //   if ($ismissingtoday) {
-    //     $missing = 'Н';
-    //     $purposeid = $conn->query("SELECT `purposeid` FROM `missings` WHERE `studentid` = '$studentid' AND `date` = '$date'")->fetch_assoc()['purposeid'];
-    //     $purpose = $conn->query("SELECT `name` FROM `purpose` WHERE `id` = '$purposeid'")->fetch_assoc()['name'];
-    //   } else {
-    //     $missing = ''; // +++++++
-    //     $purpose = '';
-    //   }
-
 
 
     // line 166 select purposes
@@ -120,12 +100,12 @@ if (isset($_SESSION['message'])) {
       $rows = $conn->query("SELECT * FROM `grades` ORDER BY `gradename`");
     }
 
-    if (isadmin()) { //filter
+    if (isadmin()) { //filter bar(не могу понять какого черта оно отрисовывается не в табличке но ладно)
       $gradenames = $conn->query("SELECT `gradename` FROM `grades` ORDER BY `gradename`");
       echo '<div class="topnav">';
       foreach ($gradenames as $gradename) {
         $gradename = $gradename['gradename'];
-        echo "<a style='padding:5px;' href='./?filter=$gradename'>" . (($gradename != '00') ? $gradename : 'Все') . "</a>";
+        echo "<a style='padding:5px;' " . ($filter == $gradename ? 'class="active"' : '') . "href='./?filter=$gradename'>" . (($gradename != '00') ? $gradename : 'Все') . "</a>";
       }
       echo "</div>";
     }
@@ -141,14 +121,7 @@ if (isset($_SESSION['message'])) {
         $studentname = $student['name'];
 
 
-        // $isabsencetoday = isset($conn->query("SELECT `date` FROM `passes` WHERE `studentid` = '$studentid' AND `date` = '$date'")->fetch_assoc()['date']);
-        // if ($isabsencetoday) {
-        //   $purposeid = $conn->query("SELECT `purposeid` FROM `passes` WHERE `studentid` = '$studentid'")->fetch_assoc()['purposeid'];
-        //   $purpose = $conn->query("SELECT `name` FROM `purpose` WHERE `id` = '$purposeid'")->fetch_assoc()['name'];
-        //   // var_dump($purpose);
-        // } else {
-        //   $purpose = '';
-        // }
+
         $purposeid = $conn->query("SELECT `purposeid` FROM `passes` WHERE `studentid` = '$studentid' AND `date` = '$date'")->fetch_assoc()['purposeid'] ?? null;
         $purpose = $purposeid ? $allpurposes[$purposeid] : '';
 

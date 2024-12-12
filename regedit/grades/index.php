@@ -45,7 +45,7 @@ adminpage();
         </form>
     </div>
     <!-- </div> -->
-    <h2 style="width: 100%;">Изменить классы</h2>
+    <!-- <h2 style="width: 100%;">Изменить классы</h2> -->
     <div id="flexbox">
         <?php
         $rows = $conn->query("SELECT * FROM `grades` ORDER BY `id`");
@@ -60,7 +60,7 @@ adminpage();
                 <form action='/regedit/grades/grades.php' method='POST'>
                 <input type='hidden' value='$id' name='id'>
                     $gradename<br>
-                    <input type='text' name='newgradename' style='width:50px; margin:0; height:25px; color:#555;' value='$gradename'><br>
+                    <input type='text' name='newgradename' style='width:46px; margin:0; height:25px; color:#555;' value='$gradename'><br>
                     <input type='submit' value='Изм.'style='width:50px; margin:5px 0px 0px; height:25px;' title='Изменить название класса'>
                 </form>
 

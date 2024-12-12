@@ -5,4 +5,4 @@ if (DEBUGMODE) {
     $_SESSION['teacherid'] = ADMINID[0];
 }
 
-redirect('./index.php');
+redirect('/home');

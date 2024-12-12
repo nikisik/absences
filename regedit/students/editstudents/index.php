@@ -44,9 +44,9 @@ if (isset($_SESSION['message'])) {
 
     <div class='flexbox'>
         <?php
-        $rows = $conn->query("SELECT `id`, `name`, `teacherid`, `gradeid` FROM `students` WHERE `teacherid` = $teacherid ORDER BY `name`");
+        $rows = $conn->query("SELECT `id`, `name`, `gradeid` FROM `students` ORDER BY `name`");
         if (isadmin()) {
-            $rows = $conn->query("SELECT `id`, `name`, `teacherid`, `gradeid` FROM `students` ORDER BY `gradeid`,`name`");
+            $rows = $conn->query("SELECT `id`, `name`,  `gradeid` FROM `students` ORDER BY `gradeid`,`name`");
         }
         foreach ($rows as $row) {
 
@@ -55,7 +55,7 @@ if (isset($_SESSION['message'])) {
             $studentid = $row['id'];
             $studentname = $row['name'];
             $date = date('Y.m.d');
-            $ismissingtoday = isset($conn->query("SELECT `date` FROM `missings` WHERE `studentid` = '$studentid' AND `date` = '$date'")->fetch_assoc()['date']);
+            $ismissingtoday = isset($conn->query("SELECT `date` FROM `passes` WHERE `studentid` = '$studentid' AND `date` = '$date'")->fetch_assoc()['date']);
             if ($ismissingtoday) {
                 $missing = 'Н';
                 $purposeid = $conn->query("SELECT `purposeid` FROM `missings` WHERE `studentid` = '$studentid' AND `date` = '$date'")->fetch_assoc()['purposeid'];

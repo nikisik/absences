@@ -46,5 +46,5 @@ if (isadmin() && !$conn->query("SELECT `id` FROM `teachers` WHERE `login` = '$lo
     }
 } else {
     $_SESSION['message'] = '<div style="max-width: 254px;">ошибка, либо такой логин уже есть, либо вы не админ, но такого быть не может, так что... задумайтесь.....</div>';
-    redirect('./');
+    redirect('/regedit/teachers/');
 }

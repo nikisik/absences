@@ -72,6 +72,12 @@ form input {
     outline: none;
 }
 
+#urodskiipadding {
+    /* еле справился с этим дерьмом, ну а что это такое, почему ИНЛАЙН ПАДДИНГ ДОБАВЛЯЕТ ШИРИНУ ИНПУТА */
+    padding-inline-start: 2px;
+    width: 176px;
+}
+
 form input::placeholder {
     color: rgba(50, 50, 140, .5);
     font-weight: 700;
