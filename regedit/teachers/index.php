@@ -34,7 +34,7 @@ adminpage();
         <a href="/home/">Пропуски</a>
         <a href='/home/statistic/'>Статистика</a>
         <a class="active" href='/regedit/teachers/'>Добавить учителя</a>
-        <a href='/regedit/students/'>Добавить ученика</a>
+        <a href='/regedit/students/'>Редактировать учеников</a>
         <a href='/regedit/purposes/'>Редактировать причины</a>
         <a href='/regedit/grades/'>Редактировать классы</a>
         <!-- <a href='/regedit/editstudents/'>Редактировать учеников</a> -->

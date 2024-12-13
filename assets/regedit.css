@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    min-width: 950px;
 }
 
 #message {
@@ -35,14 +36,14 @@ body {
     background-color: #f7e8ff;
     border: 2px solid #daacff;
     border-radius: 3px;
-    padding: 5px 5px 10px;
+    padding: 5px;
     margin: 3px;
     /* border-color: #e875ff; */
     /* border-width: 5px; */
 }
 
 .defaultbox .change {
-    width: 180px;
+    width: 100%;
     margin: 5px 0px 0px;
     height: 25px;
 
@@ -118,7 +119,7 @@ select {
     background-color: #333;
     overflow: hidden;
     width: 100%;
-    min-width: 870px;
+    min-width: 950px;
 }
 
 .topnav a {

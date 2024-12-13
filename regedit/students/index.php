@@ -4,6 +4,9 @@ adminpage();
 // if (!isadmin()) {
 //     redirect('/src/actions/logout.php');
 // }
+if (isset($_GET['filter'])) {
+    $_SESSION['filter'] = htmlspecialchars($_GET['filter'] ?? null);
+}
 ?>
 
 
@@ -22,19 +25,17 @@ adminpage();
 
 
 <body>
-    <!-- <button id="back" style="position:absolute; " onclick="window.location='../home/';">Назад</button> -->
     <div class="topnav">
         <a href="/home/">Пропуски</a>
         <a href='/home/statistic/'>Статистика</a>
         <a href='/regedit/teachers/'>Добавить учителя</a>
-        <a class="active" href='/regedit/students/'>Добавить ученика</a>
+        <a class="active" href='/regedit/students/'>Редактировать учеников</a>
         <a href='/regedit/purposes/'>Редактировать причины</a>
         <a href='/regedit/grades/'>Редактировать классы</a>
-        <!-- <a href='/regedit/editstudents/'>Редактировать учеников</a> -->
         <a href="/src/actions/logout.php" id="logoutbtn">Выйти из аккаунта</a>
     </div>
 
-    <form method="POST" action="/regedit/students/students.php" style='height:400px;float:right;'>
+    <form method="POST" action="/regedit/students/students.php" style='height:400px;float:right;' class="defaultbox">
         <input type="text" name="name" placeholder="Имя ученика" require autofocus><br>
         <?php
 
@@ -73,17 +74,39 @@ adminpage();
 
     <div id="flexbox">
         <?
-        $rows = $conn->query("SELECT * FROM `students` ORDER BY `gradeid`,`name`");
+        //filter bar(не могу понять какого черта оно отрисовывается не в табличке но ладно)
+        $filter = $_SESSION['filter'] ?? null;
+        $gradenames = $conn->query("SELECT `gradename` FROM `grades` ORDER BY `gradename`");
+        echo '<div class="topnav" style="min-width:0;">';
+        foreach ($gradenames as $gradename) {
+            $gradename = $gradename['gradename'];
+            echo "<a style='padding:2px;' " . ($filter == $gradename ? 'class="active"' : '') . "href='./?filter=$gradename'>" . (($gradename != '00') ? $gradename : 'Все') . "</a>";
+        }
+        echo "</div>";
+
+
+
+
+        if (isset($filter) && $filter != '00') {
+            $gradeid = $conn->query("SELECT `id`  FROM `grades` WHERE `gradename` = '$filter'")->fetch_assoc()['id'];
+            $rows = $conn->query("SELECT * FROM `students` WHERE `gradeid` = '$gradeid' ORDER BY `gradeid`,`name`");
+        } else {
+            $rows = $conn->query("SELECT * FROM `students` ORDER BY `gradeid`,`name`");
+        }
+
+
+
+
         foreach ($rows as $row) {
             $studentname = $row['name'];
             $studentid = $row['id'];
 
-            echo "<div style='margin: 5px; border: 1px solid rgba(154, 23, 216, .4);border-radius:5px;width:170px;'>";
-            echo "<form class='' action='./editstudents.php' method='POST' >";
+            echo "<div class='defaultbox'>";
+            echo "<form action='/regedit/students/students.php' method='POST'>";
             echo $studentname;
             echo "<input type='hidden' name='id' value='$studentid'><br>";
-            echo "<input type='text' name='newname' style='margin:5px 2px; height: 30px;width:140px;' value='$studentname'><br>";
-            echo "<button type='submit' style='height: 30px;margin: 5px 2px; width:140px;'> Изменить имя </button>";
+            echo "<input type='text' name='newname' class='change'style='margin:5px 2px; height: 30px;width:140px;' value='$studentname'><br>";
+            echo "<input type='submit' class='change' style='height: 30px;margin: 5px 2px; width:140px;' value='Изменить имя'> ";
             echo "</form></div>";
         }
         ?>

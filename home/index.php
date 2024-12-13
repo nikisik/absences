@@ -8,7 +8,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/src/helpers.php';
 // }
 userpage();
 if (isset($_GET['filter'])) {
-  $_SESSION['filter'] = $_GET['filter'] ?? null;
+  $_SESSION['filter'] = htmlspecialchars($_GET['filter'] ?? null);
 }
 
 $teacherid = $_SESSION['teacherid'];
@@ -42,7 +42,7 @@ if (isset($_SESSION['message'])) {
       
       <a href='./statistic/'>Статистика</a>
       <a href='/regedit/teachers/'>Добавить учителя</a>
-      <a href='/regedit/students/'>Добавить ученика</a>
+      <a href='/regedit/students/'>Редактировать учеников</a>
       <a href='/regedit/purposes/'>Редактировать причины</a>
       <a href='/regedit/grades/'>Редактировать классы</a>
       
@@ -85,11 +85,11 @@ if (isset($_SESSION['message'])) {
     }
 
 
-    if (!isadmin() && $teacherid > 0) {
+    if (!isadmin()) {
       $gradeid = $conn->query("SELECT gradeid FROM teachers WHERE id = '$teacherid'")->fetch_assoc()['gradeid'];
       $rows = $conn->query("SELECT * FROM `grades` WHERE `id` = '$gradeid' ORDER BY `gradename`");
     } else if (isadmin() && isset($_SESSION['filter'])) { //фильтрация включена
-      $filter = htmlspecialchars($_SESSION['filter']);
+      $filter = $_SESSION['filter'];
       $gradeid = $conn->query("SELECT `id` FROM `grades` WHERE `gradename` = '$filter'")->fetch_assoc()['id'] ?? null;
       $rows = $conn->query("SELECT * FROM `grades` WHERE `id` = '$gradeid'");
       // unset($_GET['filter']);
@@ -105,7 +105,7 @@ if (isset($_SESSION['message'])) {
       echo '<div class="topnav">';
       foreach ($gradenames as $gradename) {
         $gradename = $gradename['gradename'];
-        echo "<a style='padding:5px;' " . ($filter == $gradename ? 'class="active"' : '') . "href='./?filter=$gradename'>" . (($gradename != '00') ? $gradename : 'Все') . "</a>";
+        echo "<a style='padding:5px;' " . (($filter ?? null) == $gradename ? 'class="active"' : '') . "href='./?filter=$gradename'>" . (($gradename != '00') ? $gradename : 'Все') . "</a>";
       }
       echo "</div>";
     }
