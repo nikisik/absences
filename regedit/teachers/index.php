@@ -25,7 +25,7 @@ adminpage();
     <link href='/assets/regedit.css' rel='stylesheet'>
 
 
-
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
 <body>
@@ -33,7 +33,7 @@ adminpage();
     <div class="topnav">
         <a href="/home/">Пропуски</a>
         <a href='/home/statistic/'>Статистика</a>
-        <a class="active" href='/regedit/teachers/'>Добавить учителя</a>
+        <a class="active" href='/regedit/teachers/'>Редактировать учителей</a>
         <a href='/regedit/students/'>Редактировать учеников</a>
         <a href='/regedit/purposes/'>Редактировать причины</a>
         <a href='/regedit/grades/'>Редактировать классы</a>
@@ -62,15 +62,7 @@ adminpage();
             echo "</select><br>";
             ?>
             <button type="submit">Сделать запись</button>
-            <?php //DEBUG
 
-            userinfo();
-
-            if (isset($_SESSION['message'])) {
-                echo $_SESSION['message'];
-                unset($_SESSION['message']);
-            }
-            ?>
         </form>
     </div>
 
@@ -82,13 +74,16 @@ adminpage();
         foreach ($teachers as $teacher) {
             $name = $teacher['name'];
             $login = $teacher['login'];
-
+            $id = $teacher['id'];
+            $gradename =  $conn->query("SELECT `gradename` FROM `grades` WHERE `id` = '" . $teacher['gradeid'] . "'")->fetch_assoc()['gradename'] ?? '00';
             echo "
-                <div class='defaultbox' >
+                <div class='defaultbox' style='white-space: nowrap;'>      
                     <form method='POST' action='./teachers.php'>
-                        $name<br>
-                        $login
-
+                        <input type='hidden' name='id' value='$id' require>
+                        $name <a href='./teachers.php?deleteid=$id'style='float:right;'><i class='bx bx-x'></i></a><br>
+                        <!-- <input type='text' name='newname' value='$name' class='change' require><br> --!>
+                        $login<br>
+                        $gradename
                     </form>
                 </div>
                 ";
@@ -96,6 +91,14 @@ adminpage();
 
         ?>
     </div>
+
+    <?php
+    userinfo();
+    if (isset($_SESSION['message'])) {
+        echo $_SESSION['message'];
+        unset($_SESSION['message']);
+    }
+    ?>
 
 </body>
 

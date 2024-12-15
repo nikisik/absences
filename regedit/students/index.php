@@ -28,7 +28,7 @@ if (isset($_GET['filter'])) {
     <div class="topnav">
         <a href="/home/">Пропуски</a>
         <a href='/home/statistic/'>Статистика</a>
-        <a href='/regedit/teachers/'>Добавить учителя</a>
+        <a href='/regedit/teachers/'>Редактировать учителей</a>
         <a class="active" href='/regedit/students/'>Редактировать учеников</a>
         <a href='/regedit/purposes/'>Редактировать причины</a>
         <a href='/regedit/grades/'>Редактировать классы</a>

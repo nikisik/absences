@@ -22,7 +22,6 @@ body {
     display: flex;
     flex-wrap: wrap;
     /* justify-content: center; */
-    /* justify-content: center; */
     /* align-items: center; */
     /* height: 100%; */
     /* min-width: 450px; */
@@ -53,6 +52,15 @@ body {
 .defaultbox #deletebutton {
     background-color: hsl(346, 100%, 82%);
     border: 2px solid #ff9fb7;
+}
+
+i {
+    font-weight: 1000 !important;
+    color: rgb(170, 0, 0);
+}
+
+i:hover {
+    color: red;
 }
 
 /* form {

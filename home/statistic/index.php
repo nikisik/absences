@@ -31,7 +31,7 @@ if (isset($_SESSION['message'])) {
     <div class="topnav">
         <a href="/home/">Пропуски</a>
         <a class="active" href='/home/statistic/'>Статистика</a>
-        <a href='/regedit/teachers/'>Добавить учителя</a>
+        <a href='/regedit/teachers/'>Редактировать учителей</a>
         <a href='/regedit/students/'>Редактировать учеников</a>
         <a href='/regedit/purposes/'>Редактировать причины</a>
         <a href='/regedit/grades/'>Редактировать классы</a>
