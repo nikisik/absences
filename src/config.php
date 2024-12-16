@@ -12,7 +12,7 @@ require_once 'dbpassword.php';
 
 
 const ADMINID = array(999);
-const DEBUGMODE = true;
+
 
 if (!DEBUGMODE) {
     error_reporting(0);
