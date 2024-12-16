@@ -77,10 +77,10 @@ adminpage();
             $id = $teacher['id'];
             $gradename =  $conn->query("SELECT `gradename` FROM `grades` WHERE `id` = '" . $teacher['gradeid'] . "'")->fetch_assoc()['gradename'] ?? '00';
             echo "
-                <div class='defaultbox' style='white-space: nowrap;'>      
-                    <form method='POST' action='./teachers.php'>
+                <div class='defaultbox' style='white-space: nowrap;'>
+                    <form method='POST' action='/regedit/teachers/teachers.php'>
                         <input type='hidden' name='id' value='$id' require>
-                        $name <a href='./teachers.php?deleteid=$id'style='float:right;'><i class='bx bx-x'></i></a><br>
+                        $name <a href='/regedit/teachers/teachers.php?deleteid=$id'style='float:right;'><i class='bx bx-x'></i></a><br>
                         <!-- <input type='text' name='newname' value='$name' class='change' require><br> --!>
                         $login<br>
                         $gradename

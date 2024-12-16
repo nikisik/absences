@@ -4,6 +4,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/src/helpers.php';
 adminpage();
 
 if (isset($_POST['login']) && isset($_POST['password']) && isset($_POST['name']) && isset($_POST['gradeid'])) {
+    if (empty($_POST['login']) || empty($_POST['password']) || empty($_POST['name']) || empty($_POST['gradeid'])) {
+        $_SESSION['message'] = 'ЧТО-ТО ПУСТО БОЖЕ МОЙ КАКОЙ СТРЕСС КАКОЙ СТРЕСС';
+        redirect('/regedit/teachers/');
+    }
     $login = htmlspecialchars($_POST['login']);
     $password = hash('sha256', $_POST['password']);
     $name = htmlspecialchars($_POST['name']);

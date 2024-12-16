@@ -102,7 +102,7 @@ select {
 
 #myChart {
     /* width: 95vw; */
-    max-width: 100lvw;
+    max-width: 95lvw;
     /* height: 500px; */
     /* margin-top: 60px; */
 }
@@ -120,9 +120,9 @@ select {
 }
 
 #printbutton {
-    margin: 15px;
-    width: 40%;
-    height: 50px;
+    margin-top: 10px;
+    width: 320px;
+    height: 40px;
     border: none;
     outline: none;
     color: rgb(0, 0, 0);
@@ -132,11 +132,22 @@ select {
     border: 2px solid rgba(0, 0, 0, 0.2);
     background: rgba(157, 0, 172, .3);
     cursor: pointer;
-    min-width: 350px;
+    /* min-width: 200px; */
 }
 
-#printformdiv {
+#dates {
     display: flex;
     align-items: center;
-    justify-content: center
+    /* justify-content: center */
+}
+
+.date {
+    font-weight: 700;
+    color: #100076;
+    text-decoration: none;
+    margin: 2px;
+    padding: 2px;
+    background-color: rgba(200, 150, 200, .16);
+    border: rgb(200, 150, 200) solid 2px;
+    border-radius: 4px;
 }

@@ -60,7 +60,7 @@ adminpage();
             $studentid = $pass['studentid'];
             $name = $conn->query("SELECT `name` FROM `students` WHERE `id` = $studentid")->fetch_assoc()['name'] ?? 'ученик удалён';
 
-            $purpose = $allpurposes[$pass["purposeid"]];
+            $purpose = $allpurposes[$pass["purposeid"]] ?? 'причина удалена';
 
             echo "
             <tr>
@@ -87,6 +87,7 @@ adminpage();
         echo "
         <script>
             print();
+            //setTimeout(function my(){location.href = '/home/statistic/';}, 1000);
         </script>"; #print, всё понятно??????
     }
     echo "Количесво пропусков за сегодня: " . $NumberOfPasses;

@@ -20,6 +20,7 @@ if (isset($_GET['filter'])) {
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
     <link href='/assets/regedit.css' rel='stylesheet'>
 
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
 
@@ -49,7 +50,7 @@ if (isset($_GET['filter'])) {
             }
             $id = $row['id'];
             echo "<option value='$id' ";
-            if (($_SESSION['getgrade'] ?? null) == $gradename) {
+            if (($_SESSION['filter'] ?? null) == $gradename) {
                 echo "selected";
             }
             echo ">$gradename</option>";
@@ -103,7 +104,7 @@ if (isset($_GET['filter'])) {
 
             echo "<div class='defaultbox'>";
             echo "<form action='/regedit/students/students.php' method='POST'>";
-            echo $studentname;
+            echo $studentname . " <a href='/regedit/students/students.php?deleteid=$studentid'style='float:right;'><i class='bx bx-x'></i></a>";
             echo "<input type='hidden' name='id' value='$studentid'><br>";
             echo "<input type='text' name='newname' class='change'style='margin:5px 2px; height: 30px;width:140px;' value='$studentname'><br>";
             echo "<input type='submit' class='change' style='height: 30px;margin: 5px 2px; width:140px;' value='Изменить имя'> ";

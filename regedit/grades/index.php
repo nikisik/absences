@@ -66,7 +66,7 @@ adminpage();
 
                 <form action='/regedit/grades/grades.php' method='POST'>
                     <input type='hidden' value='$id' name='deleteid'>
-                    <input type='submit' value='Удал.'style='width:50px; margin:5px 0px 0px; height:25px;' title='Удалить класс. Возможно только тогда, когда ни одному ученику не присовен id этого класса'>
+                    <input type='submit' value='Удал.'style='width:50px; margin:5px 0px 0px; height:25px;'id='deletebutton' title='Удалить класс. Возможно только тогда, когда ни одному ученику не присовен id этого класса'>
                 </form>
             </div>";
         }

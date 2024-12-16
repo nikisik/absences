@@ -122,42 +122,43 @@ if (isset($_SESSION['message'])) {
 
     <!-- ВОТ тут очень надо сделать модальное окно с формой чтоб можно было выставлять $_GET['date'], например 'print.php?date=06.12.2024' -->
     <!-- или не надо -->
-    <div id="printformdiv">
-        <div>
-            <form>
-                <!-- <select name="" id="date">
-                    <option>
-                        выбор даты
-                    </option>
-                </select> -->
-            </form>
+
+    <div style="margin: 15px;">
+        <b>Тыкните на кнопочку с датой чтобы распечатать пропуски за конкретное число:</b>
+
+        <div id="dates">
+            <?php
+            $dates = $conn->query("SELECT DISTINCT `date` FROM `passes` ORDER BY `date`;");
+            foreach ($dates as $date) {
+                $date = date_format(date_create_from_format('Y.m.d', $date['date']), 'd.m.Y');
+                echo "<a href='/home/statistic/print/?date=$date' class='date' title='Распечатать пропуски за $date'>$date</a>";
+            }
+            ?>
         </div>
 
-        <button onclick="location.href = './print/';" id="printbutton" title="Страница для распечатки">Перейти на страницу для распечатки</button>
+        <button onclick="location.href = '/home/statistic/print/';" id="printbutton" title="Страница для распечатки">
+            <b>Список за сегодня</b>
+        </button>
+
     </div>
 
 
 
 
 
-
     <?php
-    global $existrec;
+    $NumberOfPasses = $conn->query("SELECT COUNT(`id`) FROM `passes` WHERE `date` = '" . date('Y.m.d') . "';")->fetch_assoc()['COUNT(`id`)'];
+    echo 'Пропусков за сегодня: ' . $NumberOfPasses;
+    $NumberOfDates = $dates->num_rows;
+    // global $existrec;
     $existrec = null !== $conn->query("SELECT `id` FROM `passes` LIMIT 1")->fetch_assoc();
     // var_dump($existrec);
     if (!$existrec) {
         echo "<!-- \n";
     }
     ?>
-
-
     <script src="https://www.gstatic.com/charts/loader.js"></script>
-    <div id="myChart"></div>
-
-
-
-
-
+    <div id="myChart" <? echo "style='height:" . $NumberOfDates * 70 . "px;'"; ?>></div>
 
     <script>
         google.charts.load('current', {
@@ -171,23 +172,13 @@ if (isset($_SESSION['message'])) {
             const data = google.visualization.arrayToDataTable([
                 ['Дата', 'Пропуски'],
                 <?php
-                // $dates = $conn->query("SELECT DISTINCT `date` FROM `passes` ORDER BY `date`;");
-                // global $dates;
-
-
-                // if (!empty($dates->fetch_assoc())) {
-                $dates = $conn->query("SELECT DISTINCT `date` FROM `passes` ORDER BY `date`;");
+                //$dates = $conn->query("SELECT DISTINCT `date` FROM `passes` ORDER BY `date`;"); ЭТО ТЕПЕРЬ ПРОИСХОДИТ ВЫШЕ
                 foreach ($dates as $date) {
                     $date = $date['date'];
                     $passes = $conn->query("SELECT COUNT(`id`) FROM `passes` WHERE `date` = '$date';")->fetch_assoc()['COUNT(`id`)'];
+                    $date = date_format(date_create_from_format('Y.m.d', $date), 'd.m.Y');
                     echo "['$date', $passes],";
                 }
-                // }
-
-
-                // else {
-                //     echo "['', 0]";
-                // }
                 ?>
             ]);
 
@@ -203,23 +194,14 @@ if (isset($_SESSION['message'])) {
         }
     </script>
 
-    <?php
+    <!-- вот тут построим аагромний диаграммас (причина/кол-во; дата/причина) https://developers.google.com/chart/interactive/docs/gallery/areachart?hl=ru -->
 
-    // $dates = $conn->query("SELECT DISTINCT `date` FROM `passes` ORDER BY `date`;");
+    <?php
     if (!$existrec) {
         echo "-->";
     }
-    // var_dump($dates->fetch_assoc());
-    // var_dump($dates);
     ?>
 
-
-
-    <?php
-    // global $dates;
-    // var_dump(empty($dates));
-
-    ?>
 </body>
 
 </html>
