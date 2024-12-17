@@ -58,10 +58,14 @@ if (isset($_SESSION['message'])) {
         <?php
 
         // $rows = $conn->query("SELECT * FROM `students` ORDER BY `gradeid`,`name`");
+        $purposes = $conn->query("SELECT * FROM `purpose` ORDER BY `id`");
+        $allpurposes = array();
+        foreach ($conn->query("SELECT `id`,`name` FROM `purpose` ORDER BY `id`") as $allpurposesrow) {
+            $allpurposes = $allpurposes + array($allpurposesrow['id'] => $allpurposesrow['name']);
+        }
 
-
-
-        foreach ($conn->query("SELECT * FROM `grades` ORDER BY `gradename`") as $grade) {
+        $grades = $conn->query("SELECT * FROM `grades` ORDER BY `gradename`");
+        foreach ($grades as $grade) {
             $gradeid = $grade['id'];
             $gradename = $grade['gradename'];
             $rows = $conn->query("SELECT * FROM `students` WHERE `gradeid` = '$gradeid' ORDER BY `name`");
@@ -91,7 +95,7 @@ if (isset($_SESSION['message'])) {
 
                 foreach ($passes as $pass) {
                     $purposeid =  $pass['purposeid'];
-                    $purposename = $conn->query("SELECT `name` FROM `purpose` WHERE `id` = '$purposeid';")->fetch_assoc()['name'];
+                    $purposename = $allpurposes[$purposeid];
                     $passdate = date_format(date_create_from_format("Y.m.d", $pass['date']), "d.m.Y"); //еле справился, мне нравится
                     echo "<option> $purposename, $passdate </option>";
                 }
@@ -137,7 +141,7 @@ if (isset($_SESSION['message'])) {
         </div>
 
         <button onclick="location.href = '/home/statistic/print/';" id="printbutton" title="Страница для распечатки">
-            <b>Список за сегодня</b>
+            <b>Список на сегодня</b>
         </button>
 
     </div>
@@ -158,8 +162,8 @@ if (isset($_SESSION['message'])) {
     }
     ?>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
-    <div id="myChart" <? echo "style='height:" . $NumberOfDates * 70 . "px;'"; ?>></div>
 
+    <div id="Date/Pass" <? echo "style='height:" . $NumberOfDates * 70 . "px;'"; ?>></div>
     <script>
         google.charts.load('current', {
             'packages': ['corechart']
@@ -169,15 +173,18 @@ if (isset($_SESSION['message'])) {
         function drawChart() {
 
             // Set Data
-            const data = google.visualization.arrayToDataTable([
-                ['Дата', 'Пропуски'],
+            var data = google.visualization.arrayToDataTable([
+                ['Дата', 'Пропуски', {
+
+                    role: 'annotation'
+                }],
                 <?php
                 //$dates = $conn->query("SELECT DISTINCT `date` FROM `passes` ORDER BY `date`;"); ЭТО ТЕПЕРЬ ПРОИСХОДИТ ВЫШЕ
                 foreach ($dates as $date) {
                     $date = $date['date'];
                     $passes = $conn->query("SELECT COUNT(`id`) FROM `passes` WHERE `date` = '$date';")->fetch_assoc()['COUNT(`id`)'];
                     $date = date_format(date_create_from_format('Y.m.d', $date), 'd.m.Y');
-                    echo "['$date', $passes],";
+                    echo "['$date', $passes, $passes],";
                 }
                 ?>
             ]);
@@ -188,13 +195,169 @@ if (isset($_SESSION['message'])) {
             };
 
             // Draw
-            const chart = new google.visualization.BarChart(document.getElementById('myChart'));
+            const chart = new google.visualization.BarChart(document.getElementById('Date/Pass'));
             chart.draw(data, options);
 
         }
     </script>
 
     <!-- вот тут построим аагромний диаграммас (причина/кол-во; дата/причина) https://developers.google.com/chart/interactive/docs/gallery/areachart?hl=ru -->
+    <!-- и сделал же -->
+
+    <div id="Date/Purpose" style="width: 100%; height: 500px;"></div> <!--ДАТА/ПРИЧИНА -->
+    <script type="text/javascript">
+        // google.charts.load('current', {
+        //     'packages': ['corechart']
+        // });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Date',
+                    <?php
+                    foreach ($purposes as $purpose) {
+                        $name = $purpose['name'];
+                        echo "'$name',";
+                    } ?>
+
+                ],
+
+                <?php
+                foreach ($dates as $date) {
+                    $date = $date['date'];
+                    echo "['" . date_format(date_create_from_format('Y.m.d', $date), 'd.m.Y') . "',";
+
+                    foreach ($purposes as $purpose) {
+                        $purposeid = $purpose['id'];
+                        $quantity = $conn->query("SELECT `id` FROM `passes` WHERE `date` = '$date' AND `purposeid` = '$purposeid'")->num_rows;
+                        echo "$quantity,";
+                    }
+
+                    echo " ],\n";
+                }
+
+                ?>
+
+            ]);
+
+            var options = {
+                title: 'Дата/Причины',
+                hAxis: {
+                    title: '',
+                    titleTextStyle: {
+                        color: '#333'
+                    }
+                },
+                vAxis: {
+                    minValue: 0
+                },
+                isStacked: 1,
+                legend: {
+                    position: 'top',
+                    maxLines: 3
+                },
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('Date/Purpose'));
+            chart.draw(data, options);
+        }
+    </script>
+
+
+    <div id="PurposesToday" style="width: 900px; height: 500px;"></div><!-- ПРИЧИНЫ СЕГОДНЯ -->
+    <script type="text/javascript">
+        google.charts.load("current", {
+            packages: ["corechart"]
+        });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Причина', 'Количество'],
+                <?php
+                foreach ($purposes as $purpose) {
+                    $purposename = $purpose['name'];
+                    $purposeid = $purpose['id'];
+                    $date = date('Y.m.d');
+                    $quantity = $conn->query("SELECT `id` FROM `passes` WHERE `purposeid` = '$purposeid' AND `date` = '$date'")->num_rows;
+                    echo "['$purposename',$quantity],";
+                }
+                ?>
+            ]);
+
+            var options = {
+                title: 'Причины пропусков за сегодня',
+                pieHole: 0.4,
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('PurposesToday'));
+            chart.draw(data, options);
+        }
+    </script>
+
+
+    <div id="Grade/Purposes" style="width: 100%; height: 500px;"></div>
+    <script type="text/javascript">
+        // google.charts.load('current', {
+        //     'packages': ['corechart']
+        // });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Grade',
+                    <?php
+                    foreach ($purposes as $purpose) {
+                        $name = $purpose['name'];
+                        echo "'$name',";
+                    } ?>
+
+                ],
+
+                <?php
+                foreach ($grades as $grade) {
+                    $gradename = $grade['gradename'];
+                    if ($gradename == '00') {
+                        continue;
+                    }
+                    $gradeid = $grade['id'];
+                    echo "['$gradename',";
+
+                    foreach ($purposes as $purpose) {
+                        $purposeid = $purpose['id'];
+                        $quantity = $conn->query("SELECT `id` FROM `passes` WHERE `date` = '$date' AND `gradeid` = '$gradeid' AND `purposeid` = '$purposeid'")->num_rows;
+                        echo "$quantity,";
+                    }
+
+                    echo " ],\n";
+                }
+
+                ?>
+
+            ]);
+
+            var options = {
+                title: 'Класс/Причины',
+                hAxis: {
+                    title: '',
+                    titleTextStyle: {
+                        color: '#333'
+                    }
+                },
+                vAxis: {
+                    minValue: 0
+                },
+                isStacked: 1,
+                legend: {
+                    position: 'top',
+                    maxLines: 3
+                },
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('Grade/Purposes'));
+            chart.draw(data, options);
+        }
+    </script>
 
     <?php
     if (!$existrec) {
