@@ -33,41 +33,19 @@ adminpage();
     <div class="topnav">
         <a href="/home/">Пропуски</a>
         <a href='/home/statistic/'>Статистика</a>
-        <a class="active" href='/regedit/teachers/'>Редактировать учителей</a>
+        <a href='/regedit/teachers/'>Редактировать учителей</a>
         <a href='/regedit/students/'>Редактировать учеников</a>
         <a href='/regedit/purposes/'>Редактировать причины</a>
         <a href='/regedit/grades/'>Редактировать классы</a>
-        <a href='/regedit/perms/'>Права</a>
+        <a class="active" href='/regedit/perms/'>Права</a>
         <a href="/src/actions/logout.php" id="logoutbtn">Выйти из аккаунта</a>
     </div>
 
 
-    <div style='height:400px;float:right;'>
-        <form method="POST" action="./teachers.php">
-            <input type="text" name="login" placeholder="login" require><br>
-            <input type="text" name="password" placeholder="password" require><br>
-            <input type="text" name="name" placeholder="name" require><br>
-            <!-- <input type="text" name="gradeid" placeholder="gradeid" require><br>-->
-            <?php
-            $rows = $conn->query("SELECT `id`, `grade`,`litera` FROM `grades` ORDER BY `grade`");
-            echo "<select name='gradeid'>";
-            foreach ($rows as $row) {
-                $gradename = $row['grade'].$row['litera'];
-                if ($gradename == '00') {
-                    continue;
-                }
-                $id = $row['id'];
-                echo "<option value='$id'>$gradename</option>";
-            }
-            echo "</select><br>";
-            ?>
-            <button type="submit">Сделать запись</button>
-
-        </form>
-    </div>
 
 
-    <div id="flexbox">
+
+    <!-- <div id="flexbox"> -->
         <?php
         $teachers = $conn->query("SELECT * FROM `teachers` ORDER BY `name`");
 
@@ -78,13 +56,9 @@ adminpage();
             }
             $name = $teacher['name'];
             $login = $teacher['login'];
-
-            $gradeid = $conn->query("SELECT `gradeid` FROM `perms` WHERE `main` = 1 AND `teacherid` = '$id'")->fetch_assoc()['gradeid'] ?? '';
-            $graderows = $conn->query("SELECT `grade`,`litera` FROM `grades` WHERE `id` = '$gradeid'")->fetch_assoc();
+            $graderows = $conn->query("SELECT `grade`,`litera` FROM `grades` WHERE `id` = '" . $teacher['gradeid'] . "'")->fetch_assoc();
             $grade = $graderows['grade'] ?? '';
             $litera = $graderows['litera'] ?? '';
-            $gradename = $grade.$litera;
-
             echo "
                 <div class='defaultbox' style='white-space: nowrap;'>
                     <form method='POST' action='/regedit/teachers/teachers.php'>
@@ -92,14 +66,14 @@ adminpage();
                         $name <a href='/regedit/teachers/teachers.php?deleteid=$id'style='float:right;'><i class='bx bx-x'></i></a><br>
                         <!-- <input type='text' name='newname' value='$name' class='change' require><br> --!>
                         $login<br>
-                        $gradename 
+                        $grade$litera
                     </form>
                 </div>
                 ";
         }
 
         ?>
-    </div>
+    <!-- </div> -->
 
     <?php
     userinfo();

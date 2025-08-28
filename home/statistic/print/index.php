@@ -52,9 +52,13 @@ adminpage();
         $allpurposes = $allpurposes + array($allpurposesrow['id'] => $allpurposesrow['name']);
     }
 
-    foreach ($conn->query("SELECT * FROM `grades` ORDER BY `gradename`") as $grade) {
-        $gradename = $grade['gradename'];
+    foreach ($conn->query("SELECT * FROM `grades` ORDER BY `grade`,`litera`") as $grade) {
         $gradeid = $grade['id'];
+        
+        $litera = $grade['litera'] ?? ''; //пока так, уж не помню почему
+        $grade = $grade['grade'] ?? '';
+        $gradename = $grade.$litera;
+        
         $passes = $conn->query("SELECT * FROM `passes` WHERE `gradeid` = '$gradeid' AND `date` = '$date'");
         foreach ($passes as $pass) {
             $studentid = $pass['studentid'];

@@ -5,13 +5,13 @@
 // const DB_NAME = 'absences';
 // const DB_USERNAME = 'root';
 // const DB_PASSWORD = '';
-require_once 'dbpassword.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/src/dbpassword.php';
 
 
 
 
 
-const ADMINID = array(999);
+const ADMINID = array(5);
 
 
 if (!DEBUGMODE) {
