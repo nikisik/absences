@@ -10,14 +10,14 @@ if (isset($_POST['name']) && isset($_POST['gradeid'])) {
         $_SESSION['message'] = 'пустой name или gradeid';
         redirect('/regedit/students/');
     }
-    $existingname = $conn->query("SELECT `gradeid` FROM `students` WHERE `name` = '$name'")->fetch_assoc()['gradeid'];
-    if (isset($existingname)) {
-        $_SESSION['message'] = 'такой ученик уже есть в ' . $conn->query("SELECT `gradename` FROM `grades` WHERE `id` = '$existingname'")->fetch_assoc()['gradename'];
-        redirect('/regedit/students/');
-    }
+    // $existingname = $conn->query("SELECT `gradeid` FROM `students` WHERE `name` = '$name'")->fetch_assoc()['gradeid'];
+    // if (isset($existingname)) {
+    //     $_SESSION['message'] = 'такой ученик уже есть в ' . $conn->query("SELECT `gradename` FROM `grades` WHERE `id` = '$existingname'")->fetch_assoc()['gradename'];
+    //     redirect('/regedit/students/');
+    // }
     if ($conn->query("INSERT INTO `students`(`name`, `gradeid`) VALUES ('$name','$gradeid')") === true) {
         // $_SESSION['message'] = 'Запись успешно внесена в БД';
-        $_SESSION['filter'] = $conn->query("SELECT `gradename` FROM `grades` WHERE `id` = '$gradeid';")->fetch_assoc()['gradename'];
+        // $_SESSION['filter'] = $conn->query("SELECT CONCAT(`grade`,litera`) AS `gradename` FROM `grades` WHERE `id` = '$gradeid';")->fetch_assoc()['gradename'];
         $_SESSION['message'] = 'ученик внесен в БД';
         redirect('/regedit/students/');
     } else {
@@ -39,7 +39,7 @@ if (isset($_POST['name']) && isset($_POST['gradeid'])) {
     }
 } else if (isset($_GET['deleteid'])) {
     $id = htmlspecialchars($_GET['deleteid']);
-    $_SESSION['filter'] = $conn->query("SELECT `gradename` FROM `grades` WHERE `id` = '" . $conn->query("SELECT `gradeid` FROM `students` WHERE `id` = $id")->fetch_assoc()['gradeid'] . "'")->fetch_assoc()['gradename'];
+    // $_SESSION['filter'] = $conn->query("SELECT CONCAT(`grade`,litera`) AS `gradename` FROM `grades` WHERE `id` = '" . $conn->query("SELECT `gradeid` FROM `students` WHERE `id` = $id")->fetch_assoc()['gradeid'] . "'")->fetch_assoc()['gradename'];
     if ($conn->query("DELETE FROM `students` WHERE `id` = '$id'") === True && $conn->query("DELETE FROM `passes` WHERE `studentid` = '$id'") === True) {
         $_SESSION['message'] = 'ученик и все пропуски с ним удалены';
         redirect('/regedit/students/');

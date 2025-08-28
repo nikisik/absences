@@ -324,7 +324,7 @@ if (isset($_SESSION['message'])) {
                     // if ($gradename == '00') {
                     //     continue;
                     // }
-                    // $gradeid = $grade['id'];
+                    $gradeid = $grade['id'];
                     echo "['$gradename',";
                     foreach ($purposes as $purpose) {
                         $purposeid = $purpose['id'];
