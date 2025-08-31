@@ -34,7 +34,7 @@ if (isset($_POST['studentid']) && isset($_POST['purposeid'])) { //add pass!
     //     getout();
     // }
     $gradeid = $conn->query("SELECT `gradeid` FROM `students` WHERE `id` = '$studentid'")->fetch_assoc()['gradeid'];
-    if (!isadmin() && !($conn->query("SELECT `gradeid` FROM `teachers` WHERE `id` = '$teacherid'")->fetch_assoc()['gradeid'] == $gradeid)) {
+    if (!isadmin() && !($conn->query("SELECT `id` FROM `perms` WHERE `teacherid` = '$teacherid' AND `gradeid` = '$gradeid'")->fetch_assoc()['id'] ?? false)) {
         getout();
     }
 
@@ -50,11 +50,11 @@ if (isset($_POST['studentid']) && isset($_POST['purposeid'])) { //add pass!
 
     $deleteid = htmlspecialchars($_POST['deleteid']);
     $teacherid = $_SESSION['teacherid'];
+    $gradeid = $conn->query("SELECT `gradeid` FROM `students` WHERE `id` = '$deleteid'")->fetch_assoc()['gradeid'];
     if (isadmin()) {
         $conn->query("DELETE FROM `passes` WHERE `studentid` = '$deleteid' AND `date` = '$date'");
-        // unset($deleteid);
-    } elseif ($conn->query("SELECT `gradeid` FROM `teachers` WHERE `id` = '$teacherid'")->fetch_assoc()['gradeid'] == $conn->query("SELECT `gradeid` FROM `students` WHERE `id` = '$deleteid'")->fetch_assoc()['gradeid']) {
-        // unset($deleteid);
+    } elseif ($conn->query("SELECT `id` FROM `perms` WHERE `gradeid` = '$gradeid' AND `teacherid` = $teacherid")->num_rows > 0 ) {
+        $gradeid = $conn->query("SELECT `gradeid` FROM `students` WHERE `id` = '$studentid'")->fetch_assoc()['gradeid'];
         $conn->query("DELETE FROM `passes` WHERE `studentid` = '$deleteid' AND `date` = '$date'");
     } else {
         // unset($deleteid);

@@ -26,7 +26,7 @@ adminpage();
         <a href='/regedit/students/'>Редактировать учеников</a>
         <a class="active" href='/regedit/purposes/'>Редактировать причины</a>
         <a href='/regedit/grades/'>Редактировать классы</a>
-        <!-- <a href='/regedit/editstudents/'>Редактировать учеников</a> -->
+        <a href='/regedit/perms/'>Права</a>
         <a href="/src/actions/logout.php" id="logoutbtn">Выйти из аккаунта</a>
     </div>
 

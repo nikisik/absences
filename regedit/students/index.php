@@ -33,6 +33,7 @@ if (isset($_GET['filter'])) {
         <a class="active" href='/regedit/students/'>Редактировать учеников</a>
         <a href='/regedit/purposes/'>Редактировать причины</a>
         <a href='/regedit/grades/'>Редактировать классы</a>
+        <a href='/regedit/perms/'>Права</a>
         <a href="/src/actions/logout.php" id="logoutbtn">Выйти из аккаунта</a>
     </div>
 
@@ -40,7 +41,7 @@ if (isset($_GET['filter'])) {
         <input type="text" name="name" placeholder="Имя ученика" require autofocus><br>
         <?php
 
-        $rows = $conn->query("SELECT `id`, `gradename` FROM `grades` ORDER BY `gradename`");
+        $rows = $conn->query("SELECT `id`, CONCAT(`grade`,`litera`) AS `gradename` FROM `grades` ORDER BY `grade`,`litera`");
         echo "<select name='gradeid'>";
 
         foreach ($rows as $row) {
@@ -77,10 +78,10 @@ if (isset($_GET['filter'])) {
         <?
         //filter bar(не могу понять какого черта оно отрисовывается не в табличке но ладно)
         $filter = $_SESSION['filter'] ?? null;
-        $gradenames = $conn->query("SELECT `gradename` FROM `grades` ORDER BY `gradename`");
+        $gradenames = $conn->query("SELECT CONCAT(`grade`,`litera`) AS `gradename` FROM `grades` ORDER BY `grade`,`litera`")->fetch_all();
         echo '<div class="topnav" style="min-width:0;">';
         foreach ($gradenames as $gradename) {
-            $gradename = $gradename['gradename'];
+            $gradename = $gradename[0];
             echo "<a style='padding:2px;' " . ($filter == $gradename ? 'class="active"' : '') . "href='./?filter=$gradename'>" . (($gradename != '00') ? $gradename : 'Все') . "</a>";
         }
         echo "</div>";
@@ -88,8 +89,8 @@ if (isset($_GET['filter'])) {
 
 
 
-        if (isset($filter) && $filter != '00') {
-            $gradeid = $conn->query("SELECT `id`  FROM `grades` WHERE `gradename` = '$filter'")->fetch_assoc()['id'];
+        if (isset($filter)) {
+            $gradeid = $conn->query("SELECT `id` FROM `grades` WHERE CONCAT(`grade`,`litera`) = '$filter'")->fetch_assoc()['id'];
             $rows = $conn->query("SELECT * FROM `students` WHERE `gradeid` = '$gradeid' ORDER BY `gradeid`,`name`");
         } else {
             $rows = $conn->query("SELECT * FROM `students` ORDER BY `gradeid`,`name`");
