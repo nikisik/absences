@@ -46,13 +46,7 @@ $keyicon =     '<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" v
 
 
     <div style='float:right;'class="defaultbox">
-    <div style='float:right;'class="defaultbox">
         <form method="POST" action="./teachers.php">
-            <h3 style='margin-bottom:0;'>Добавить учителя:</h3>
-            <input type="text" name="name" placeholder="ФИО" required><br>
-            <input type="text" name="login" placeholder="Логин" required><br>
-            <input type="text" name="password" placeholder="Пароль" required><br>
-            <!-- <input type="text" name="gradeid" placeholder="gradeid" required><br> -->
             <h3 style='margin-bottom:0;'>Добавить учителя:</h3>
             <input type="text" name="name" placeholder="ФИО" required><br>
             <input type="text" name="login" placeholder="Логин" required><br>
@@ -60,18 +54,12 @@ $keyicon =     '<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" v
             <!-- <input type="text" name="gradeid" placeholder="gradeid" required><br> -->
             <?php
             $grades = $conn->query("SELECT `id`,`grade`,`litera` FROM `grades` ORDER BY `grade`,`litera`");
-            $grades = $conn->query("SELECT `id`,`grade`,`litera` FROM `grades` ORDER BY `grade`,`litera`");
             echo "<select name='gradeid'>";
-            foreach ($grades as $grade) {
-                $gradeid = $grade['id'];
-                if ($conn->query("SELECT `id` FROM `perms` WHERE `gradeid` = '$gradeid' AND `main` = 1")->num_rows > 0) {
             foreach ($grades as $grade) {
                 $gradeid = $grade['id'];
                 if ($conn->query("SELECT `id` FROM `perms` WHERE `gradeid` = '$gradeid' AND `main` = 1")->num_rows > 0) {
                     continue;
                 }
-                $gradename = $grade['grade'].$grade['litera'];
-                echo "<option value='$gradeid'>$gradename</option>";
                 $gradename = $grade['grade'].$grade['litera'];
                 echo "<option value='$gradeid'>$gradename</option>";
             }
@@ -92,25 +80,8 @@ $keyicon =     '<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" v
             if (in_array($id, ADMINID)){ 
                 continue; 
             }
-            $id = $teacher['id'];
-            if (in_array($id, ADMINID)){ 
-                continue; 
-            }
             $name = $teacher['name'];
             $login = $teacher['login'];
-
-            $gradeid = $conn->query("SELECT `gradeid` FROM `perms` WHERE `main` = 1 AND `teacherid` = '$id'")->fetch_assoc()['gradeid'] ?? '';
-            $gradename = $conn->query("SELECT CONCAT(`grade`,`litera`) AS `gradename` FROM `grades` WHERE `id` = '$gradeid'")->fetch_assoc()['gradename'];
-
-            $gradeid = $conn->query("SELECT `gradeid` FROM `perms` WHERE `main` = 0 AND `teacherid` = '$id'")->fetch_assoc()['gradeid'] ?? '';
-            $secgrades = '';
-            foreach ($conn->query("SELECT CONCAT(`grade`,`litera`) AS `gradename` FROM `grades` WHERE `id` = '$gradeid'")->fetch_all() as $sec){
-                $secgrades = $secgrades.' '.$sec[0];
-            }
-            // $grade = $graderows['grade'] ?? '';
-            // $litera = $graderows['litera'] ?? '';
-            // $gradename = $grade.$litera;
-
 
             $gradeid = $conn->query("SELECT `gradeid` FROM `perms` WHERE `main` = 1 AND `teacherid` = '$id'")->fetch_assoc()['gradeid'] ?? '';
             $gradename = $conn->query("SELECT CONCAT(`grade`,`litera`) AS `gradename` FROM `grades` WHERE `id` = '$gradeid'")->fetch_assoc()['gradename'];
@@ -129,10 +100,7 @@ $keyicon =     '<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" v
                     <form method='POST' action='/regedit/teachers/teachers.php'>
                         <input type='hidden' name='id' value='$id' require>
                         $addressicon $name <a href='/regedit/teachers/teachers.php?deleteid=$id'style='float:right;'><i class='bx bx-x'></i></a><br>
-                        $addressicon $name <a href='/regedit/teachers/teachers.php?deleteid=$id'style='float:right;'><i class='bx bx-x'></i></a><br>
                         <!-- <input type='text' name='newname' value='$name' class='change' require><br> --!>
-                        $keyicon $login<br>
-                        <b>$gradename</b> $secgrades
                         $keyicon $login<br>
                         <b>$gradename</b> $secgrades
                     </form>
