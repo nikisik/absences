@@ -1,6 +1,6 @@
 <?php
 
-// sleep(3);
+sleep(3);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/src/helpers.php';
 

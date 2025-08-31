@@ -26,7 +26,7 @@ adminpage();
         <a href='/regedit/students/'>Редактировать учеников</a>
         <a class="active" href='/regedit/purposes/'>Редактировать причины</a>
         <a href='/regedit/grades/'>Редактировать классы</a>
-        <!-- <a href='/regedit/editstudents/'>Редактировать учеников</a> -->
+        <!-- <a href='/regedit/perms/'>Права</a> -->
         <a href="/src/actions/logout.php" id="logoutbtn">Выйти из аккаунта</a>
     </div>
 
@@ -58,7 +58,7 @@ adminpage();
                     $gradename
                     <!--$isusedanywhere--!>
                     <input id='urodskiipadding' type='text' name='newpurposename' style='color:#777;' class='change' value='$gradename'>
-                    <input type='submit' value='Изменить причину' class='change' title='Изменить причину. Возможно только тогда, когда нет ни одного пропуска с этой причиной'>
+                    <input type='submit' value='Изменить причину' class='change' title='Изменить причину.'>
                 </form>
 
                 <form action='/regedit/purposes/purposes.php' method='POST'>

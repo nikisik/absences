@@ -35,7 +35,7 @@ if (isset($_SESSION['message'])) {
         <a href='/regedit/students/'>Редактировать учеников</a>
         <a href='/regedit/purposes/'>Редактировать причины</a>
         <a href='/regedit/grades/'>Редактировать классы</a>
-        <!-- <a href='/regedit/editstudents/'>Редактировать учеников</a> -->
+        <!-- <a href='/regedit/perms/'>Права</a> -->
 
 
 
@@ -64,19 +64,22 @@ if (isset($_SESSION['message'])) {
             $allpurposes = $allpurposes + array($allpurposesrow['id'] => $allpurposesrow['name']);
         }
 
-        $grades = $conn->query("SELECT * FROM `grades` ORDER BY `gradename`");
-        foreach ($grades as $grade) {
-            $gradeid = $grade['id'];
-            $gradename = $grade['gradename'];
+        $grades = $conn->query("SELECT `id`,`grade`,`litera` FROM `grades` ORDER BY `grade`,`litera`");
+        foreach ($grades as $graderows) {
+            $gradeid = $graderows['id'];
+            $litera = $graderows['litera'] ?? '';
+            $grade = $graderows['grade'] ?? '';
+            $gradename = $grade.$litera;
             $rows = $conn->query("SELECT * FROM `students` WHERE `gradeid` = '$gradeid' ORDER BY `name`");
-            $teachername = $conn->query("SELECT `name` FROM `teachers` WHERE `gradeid` = '$gradeid';")->fetch_assoc()['name'] ?? 'Учителя для этого класса нет, добавьте'; //теперь этот запрос делается 1 раз вместо ~25
+            $teacherid = $conn->query("SELECT `teacherid` FROM `perms` WHERE `main` = 1 AND `gradeid` = '$gradeid'")->fetch_assoc()['teacherid'] ?? 0;
+            $teachername = $conn->query("SELECT `name` FROM `teachers` WHERE `id` = '$teacherid';")->fetch_assoc()['name'] ?? '—'; //теперь этот запрос делается 1 раз вместо ~25
             foreach ($rows as $row) {
 
 
                 $studentid = $row['id'];
                 $studentname = $row['name'];
                 $date = date('Y.m.d');
-                $allabsebces = count($conn->query("SELECT `id` FROM `passes` WHERE `studentid` = '$studentid';")->fetch_all() ?? array());
+                $allabsences = count($conn->query("SELECT `id` FROM `passes` WHERE `studentid` = '$studentid';")->fetch_all() ?? array());
                 // $absebcespurposeids = $conn->query("SELECT `purposeid` FROM `passes` WHERE `studentid` = '$studentid';")->fetch_all() ?? array(); //хахахах оно нигде не использовалось
 
 
@@ -85,10 +88,10 @@ if (isset($_SESSION['message'])) {
 
                 echo "<td>" . $gradename . "</td>";
                 echo "<td>" . $studentname . "</td>";
-                echo "<td>" . ($allabsebces ? $allabsebces : '') . "</td>"; // Всего пропусков
+                echo "<td>" . ($allabsences ? $allabsences : '') . "</td>"; // Всего пропусков
 
                 // ПРИЧИНЫ //
-                $passes = $conn->query("SELECT `purposeid`,`date` FROM `passes` WHERE `studentid` = '$studentid' ORDER BY `date` DESC;");
+                $passes = $conn->query("SELECT `purposeid`,`date` FROM `passes` WHERE `studentid` = '$studentid' ORDER BY `date` DESC");
 
 
                 echo "<td><select class='statisticselect' " . (empty($passes->fetch_assoc()) ? "style='pointer-events: none;' name='unclickableselect'" : "") . ">";
@@ -316,13 +319,13 @@ if (isset($_SESSION['message'])) {
 
                 <?php
                 foreach ($grades as $grade) {
-                    $gradename = $grade['gradename'];
-                    if ($gradename == '00') {
-                        continue;
-                    }
+                    
+                    $gradename = $grade['grade'] . $grade['litera'];
+                    // if ($gradename == '00') {
+                    //     continue;
+                    // }
                     $gradeid = $grade['id'];
                     echo "['$gradename',";
-
                     foreach ($purposes as $purpose) {
                         $purposeid = $purpose['id'];
                         $quantity = $conn->query("SELECT `id` FROM `passes` WHERE `date` = '$date' AND `gradeid` = '$gradeid' AND `purposeid` = '$purposeid'")->num_rows;

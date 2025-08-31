@@ -30,43 +30,50 @@ adminpage();
         <a href='/regedit/students/'>Редактировать учеников</a>
         <a href='/regedit/purposes/'>Редактировать причины</a>
         <a class="active" href='/regedit/grades/'>Редактировать классы</a>
-        <!-- <a href='/regedit/editstudents/'>Редактировать учеников</a> -->
+        <!-- <a href='/regedit/perms/'>Права</a> -->
         <a href="/src/actions/logout.php" id="logoutbtn">Выйти из аккаунта</a>
     </div>
 
-    <!-- <div style='height:400px;float:right;'> -->
-    <div class='defaultbox' style='float:right;'>
-        <form action="/regedit/grades/grades.php" method="POST">
-            <h3>Добавить класс</h3>
-            <input type="text" name='addgrade' placeholder=" e.g.: 1А, max. 3 symb." style="margin: 0;" <?php echo ($_SESSION['addedgrade'] ?? false) ? 'autofocus' : '';
-                                                                                                        unset($_SESSION['addedgrade']); ?>>
-            <br>
-            <input type="submit" value="Добавить">
-        </form>
+    <div style='float:right;'>
+        <div class='defaultbox'>
+            <form action="/regedit/grades/grades.php" method="POST">
+                <h3>Добавить класс</h3>
+                <input type="text" name='addgrade' placeholder=" e.g.: 1А, max. 3 symb." style="margin: 0;" <?php echo ($_SESSION['addedgrade'] ?? false) ? 'autofocus' : '';
+                                                                                                            unset($_SESSION['addedgrade']); ?>>
+                <br>
+                <input type="submit" value="Добавить">
+            </form>
+        </div>
+        <div class='defaultbox'>
+            <h3 style='margin:0px;'>Сдвиг по классам</h3>
+            <a href='grades.php?leftshift=1' style='text-decoration:none;color:cadetblue;'><==</a><a style='float:right;text-decoration:none;color:cadetblue;' href='grades.php?rightshift=1'>==></a><br>
+        </div>
     </div>
-    <!-- </div> -->
     <!-- <h2 style="width: 100%;">Изменить классы</h2> -->
     <div id="flexbox">
         <?php
-        $rows = $conn->query("SELECT * FROM `grades` ORDER BY `id`");
+        $rows = $conn->query("SELECT `id`,`grade`,`litera` FROM `grades` ORDER BY `grade`,`litera`");
         foreach ($rows as  $row) {
-            $gradename = $row['gradename'];
-            if ($gradename == '00') {
-                continue;
-            }
+            $grade = $row['grade'];
+            $litera = $row['litera'];
+            // if ($gradename == '00') {
+            //     continue;
+            // }
             $id = $row['id'];
+            $quantity = $conn->query("SELECT `id` FROM `students` WHERE `gradeid` = '$id'")->num_rows;
             echo "
             <div class='defaultbox'>
                 <form action='/regedit/grades/grades.php' method='POST'>
                 <input type='hidden' value='$id' name='id'>
-                    $gradename<br>
-                    <input type='text' name='newgradename' style='width:46px; margin:0; height:25px; color:#555;' value='$gradename'><br>
+                    <b title='Класс'>$grade$litera</b> : <label title='Количество учеников'>$quantity</label><br>
+                    <input type='text' name='newgrade' style='width:19px; margin:0; height:25px; color:#555;' value='$grade' title='Новый номер класса'>
+                    <input type='text' name='newlitera' style='width:19px; margin:0; height:25px; color:#555;' value='$litera' title='Новыая литера класса'><br>
                     <input type='submit' value='Изм.'style='width:50px; margin:5px 0px 0px; height:25px;' title='Изменить название класса'>
                 </form>
 
                 <form action='/regedit/grades/grades.php' method='POST'>
                     <input type='hidden' value='$id' name='deleteid'>
-                    <input type='submit' value='Удал.'style='width:50px; margin:5px 0px 0px; height:25px;'id='deletebutton' title='Удалить класс. Возможно только тогда, когда ни одному ученику не присовен id этого класса'>
+                    <input type='submit' value='Удал.'style='width:50px; margin:5px 0px 0px; height:25px;'id='deletebutton' title='Удалить класс. Возможно только тогда, когда в классе нет ни одного ученика'>
                 </form>
             </div>";
         }

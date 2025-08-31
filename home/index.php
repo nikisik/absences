@@ -45,7 +45,8 @@ if (isset($_SESSION['message'])) {
       <a href='/regedit/students/'>Редактировать учеников</a>
       <a href='/regedit/purposes/'>Редактировать причины</a>
       <a href='/regedit/grades/'>Редактировать классы</a>
-      
+      <!-- <a href='/regedit/perms/'>Права</a> -->
+
       ";
       // echo "<a href='/regedit/editstudents/'>Редактировать учеников</a>";
     }
@@ -85,26 +86,35 @@ if (isset($_SESSION['message'])) {
     }
 
 
-    if (!isadmin()) {
-      $gradeid = $conn->query("SELECT gradeid FROM teachers WHERE id = '$teacherid'")->fetch_assoc()['gradeid'];
-      $rows = $conn->query("SELECT * FROM `grades` WHERE `id` = '$gradeid' ORDER BY `gradename`");
+    if (!isadmin()) { #ОБЫЧНЫЙ УЧИТЕЛЬ
+      $req = "";
+      foreach ($conn->query("SELECT `gradeid` FROM `perms` WHERE `teacherid` = '$teacherid' AND `main` = 1 UNION SELECT `gradeid` FROM `perms` WHERE `teacherid` = '$teacherid' AND `main` = 0")->fetch_all() as $gradeid) {
+        // $gradeids = array_merge($gradeids, $gradeid);
+        $gradeid = $gradeid[0];
+        $req = $req . "SELECT * FROM `grades` WHERE `id` = $gradeid UNION ";
+      }
+      $req = substr($req, 0, -7);
+      $rows = $conn->query($req);
+
     } else if (isadmin() && isset($_SESSION['filter'])) { //фильтрация включена
       $filter = $_SESSION['filter'];
-      $gradeid = $conn->query("SELECT `id` FROM `grades` WHERE `gradename` = '$filter'")->fetch_assoc()['id'] ?? null;
+      $gradeid = $conn->query("SELECT `id` FROM `grades` WHERE CONCAT(`grade`,`litera`) = '$filter'")->fetch_assoc()['id'] ?? null;
       $rows = $conn->query("SELECT * FROM `grades` WHERE `id` = '$gradeid'");
       // unset($_GET['filter']);
       if ($filter == '00') {   //фильтр на все классы
-        $rows = $conn->query("SELECT * FROM `grades` ORDER BY `gradename`");
+        $rows = $conn->query("SELECT * FROM `grades` ORDER BY `grade`,`litera`");
       }
     } else if (isadmin() && !isset($_SESSION['filter'])) {  //фильтра нет, выводим все классы
-      $rows = $conn->query("SELECT * FROM `grades` ORDER BY `gradename`");
+      $rows = $conn->query("SELECT * FROM `grades` ORDER BY `grade`,`litera`");
     }
 
     if (isadmin()) { //filter bar(не могу понять какого черта оно отрисовывается не в табличке но ладно)
-      $gradenames = $conn->query("SELECT `gradename` FROM `grades` ORDER BY `gradename`");
+      $grades = $conn->query("SELECT `grade`,`litera` FROM `grades` ORDER BY `grade`,`litera`");
       echo '<div class="topnav">';
-      foreach ($gradenames as $gradename) {
-        $gradename = $gradename['gradename'];
+      foreach ($grades as $grade) {
+        $litera = $grade['litera'] ?? '';
+        $grade = $grade['grade'] ?? '';
+        $gradename = $grade.$litera;
         echo "<a style='padding:5px;' " . (($filter ?? null) == $gradename ? 'class="active"' : '') . "href='./?filter=$gradename'>" . (($gradename != '00') ? $gradename : 'Все') . "</a>";
       }
       echo "</div>";
@@ -114,7 +124,9 @@ if (isset($_SESSION['message'])) {
     $date = date('Y.m.d');
     foreach ($rows as $row) {
       $gradeid = $row['id'];
-      $gradename = $row['gradename'];
+      $litera = $row['litera'] ?? '';
+      $grade = $row['grade'] ?? '';
+      $gradename = $grade.$litera;
       $students = $conn->query("SELECT * FROM `students` WHERE `gradeid` = $gradeid ORDER BY `name`");
       foreach ($students as $student) {
         $studentid = $student['id'];

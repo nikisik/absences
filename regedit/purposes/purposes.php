@@ -33,11 +33,12 @@ if (isset($_POST['addpurpose'])) {
     } else if (isset($_POST['newpurposename']) && isset($_POST['id'])) {
         $newpurposename = htmlspecialchars($_POST['newpurposename']);
         $id = htmlspecialchars($_POST['id']);
-        $isusedanywhere = isset($conn->query("SELECT `id` FROM `passes` WHERE `purposeid` = '$id'")->fetch_assoc()['id']);
-        if ($isusedanywhere) {
-            $_SESSION['message'] = "<div id='message'>Вы должны удалить все пропуски с этой причиной</div>";
-            redirect('/regedit/purposes/');
-        } else if ($conn->query("UPDATE `purpose` SET `name`='$newpurposename' WHERE `id` = '$if'") === True) {
+        // $isusedanywhere = isset($conn->query("SELECT `id` FROM `passes` WHERE `purposeid` = '$id'")->fetch_assoc()['id']);
+        // if ($isusedanywhere) {
+        //     $_SESSION['message'] = "<div id='message'>Вы должны удалить все пропуски с этой причиной</div>";
+        //     redirect('/regedit/purposes/');
+        // } else 
+        if ($conn->query("UPDATE `purpose` SET `name`='$newpurposename' WHERE `id` = '$id'") === True) {
             $_SESSION['message'] = "<div id='message'>Название причины изменено</div>";
             redirect('/regedit/purposes/');
         } else {
