@@ -59,7 +59,7 @@ if (isset($_GET['filter'])) {
         echo "</select><br>";
         ?>
         <button type="submit">Сделать запись</button>
-
+        <br>
         <?php //DEBUG
 
         userinfo();
