@@ -52,28 +52,54 @@ adminpage();
         $allpurposes = $allpurposes + array($allpurposesrow['id'] => $allpurposesrow['name']);
     }
 
-    foreach ($conn->query("SELECT * FROM `grades` ORDER BY `grade`,`litera`") as $grade) {
-        $gradeid = $grade['id'];
-        
-        $litera = $grade['litera'] ?? ''; //пока так, уж не помню почему
-        $grade = $grade['grade'] ?? '';
-        $gradename = $grade.$litera;
-        
-        $passes = $conn->query("SELECT * FROM `passes` WHERE `gradeid` = '$gradeid' AND `date` = '$date'");
-        foreach ($passes as $pass) {
-            $studentid = $pass['studentid'];
-            $name = $conn->query("SELECT `name` FROM `students` WHERE `id` = $studentid")->fetch_assoc()['name'] ?? 'ученик удалён';
-
-            $purpose = $allpurposes[$pass["purposeid"]] ?? 'причина удалена';
-
-            echo "
-            <tr>
-                <th>$gradename</th>
-                <th>$name</th>
-                <th>$purpose</th>
-            </tr>";
-        }
+    $allstudents = array();
+    foreach($conn->query("SELECT `id`,`name` FROM `students` ORDER BY `name`") as $studentrow){
+        $allstudents = $allstudents + array($studentrow['id'] => $studentrow['name']);
     }
+
+    $allgrades = array();
+    foreach($conn->query("SELECT `id`,CONCAT(`grade`,`litera`) AS `gradename` FROM `grades` ORDER BY `grade`,`litera`") as $graderow){
+        $allgrades = $allgrades + array($graderow['id'] => $graderow['gradename']);
+    }
+
+    $allpassestoday = array();
+    foreach ($conn->query("SELECT * FROM `passes` WHERE `date` = '$date'") as $allpassesrow) {
+        array_push($allpassestoday,array('grade' => $allgrades[$allpassesrow['gradeid']],'student' => $allstudents[$allpassesrow['studentid']], 'purpose' => $allpurposes[$allpassesrow['purposeid']]));
+    }
+    array_multisort($allpassestoday);
+
+    foreach ($allpassestoday as $pass) {
+        $grade = $pass['grade'];
+        $student = $pass['student'];
+        $purpose = $pass['purpose'];
+        echo "
+        <tr>
+            <th>$grade</th>
+            <th>$student</th>
+            <th>$purpose</th>
+        </tr
+        ";
+    }
+
+    // foreach ($conn->query("SELECT `id`,CONCAT(`grade`,`litera`) AS `gradename` FROM `grades` ORDER BY `grade`,`litera`") as $grade) {
+    //     $gradeid = $grade['id'];
+    //     $gradename = $grade['gradename'];
+        
+    //     $passes = $conn->query("SELECT * FROM `passes` WHERE `gradeid` = '$gradeid' AND `date` = '$date'");
+    //     foreach ($passes as $pass) {
+    //         $studentid = $pass['studentid'];
+    //         $name = $conn->query("SELECT `name` FROM `students` WHERE `id` = $studentid")->fetch_assoc()['name'] ?? 'ученик удалён';
+
+    //         $purpose = $allpurposes[$pass["purposeid"]] ?? 'причина удалена';
+
+    //         echo "
+    //         <tr>
+    //             <th>$gradename</th>
+    //             <th>$name</th>
+    //             <th>$purpose</th>
+    //         </tr>";
+    //     }
+    // }
 
 
     echo '</table>';
