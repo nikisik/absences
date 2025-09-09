@@ -47,7 +47,8 @@ function logout()
 
 function getout()
 {
-    $_SESSION['teacherid'] = 0;
+    // $_SESSION['teacherid'] = 0;
+    session_destroy();
     redirect('/');
 }
 

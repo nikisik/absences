@@ -12,7 +12,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/src/dbpassword.php';
 
 
 const ADMINID = array(5);
-
+const LOGINDELAY = 3;
 
 if (!DEBUGMODE) {
     error_reporting(0);

@@ -1,9 +1,9 @@
 <?php
 
-sleep(3);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/src/helpers.php';
 
+sleep(LOGINDELAY);
 
 $login = htmlspecialchars($_POST['login']) ?? '';
 $password = $_POST['password'] ?? '';

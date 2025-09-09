@@ -37,7 +37,7 @@ if (isset($_POST['addgrade'])) {
         redirect('/regedit/grades/');
     }
 
-    if ($addgrade > 11 || $addgrade < 1 || strlen($addlitera) > 1) {
+    if ($addgrade > 11 || $addgrade < 1 || mb_strlen($addlitera) > 1) {
         $_SESSION['message'] = "<div id='message'>класс не может быть больше 11 или меншьше 1</div>";
         redirect('/regedit/grades/');
     }
@@ -64,6 +64,7 @@ if (isset($_POST['deleteid'])) {
         redirect('/regedit/grades/');
     }
     if ($conn->query("DELETE FROM `grades` WHERE `id` = '$deleteid'") === True) {
+        $conn->query("DELETE FROM `perms` WHERE `gradeid` = '$deleteid'");
         $gradename = $conn->query("SELECT CONCAT(`grade`,`litera`) AS `gradename` FROM `grades` WHERE `id` = '$deleteid' ORDER BY `grade`,`litera`")->fetch_assoc()['gradename'];
         $_SESSION['message'] = "<div id='message'>Класс $gradename был удален</div>";
         redirect('/regedit/grades/');
