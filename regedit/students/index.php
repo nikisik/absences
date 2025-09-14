@@ -19,23 +19,15 @@ if (isset($_GET['filter'])) {
     <title>Create DB record</title>
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
     <link href='/assets/regedit.css' rel='stylesheet'>
-
+    <link href='/assets/topbar.css' rel='stylesheet'>
+    <link href='/assets/filter.css' rel='stylesheet'>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
 
 
 <body>
-    <div class="topnav">
-        <a href="/home/">Пропуски</a>
-        <a href='/home/statistic/'>Статистика</a>
-        <a href='/regedit/teachers/'>Редактировать учителей</a>
-        <a class="active" href='/regedit/students/'>Редактировать учеников</a>
-        <a href='/regedit/purposes/'>Редактировать причины</a>
-        <a href='/regedit/grades/'>Редактировать классы</a>
-        <!-- <a href='/regedit/perms/'>Права</a> -->
-        <a href="/src/actions/logout.php" id="logoutbtn">Выйти из аккаунта</a>
-    </div>
+    <?= makeTopbar(PAGES, '/regedit/students/', isadmin());?>
 
     <form method="POST" action="/regedit/students/students.php" style='height:400px;float:right;' class="defaultbox">
         <input type="text" name="name" placeholder="Имя ученика" require autofocus><br>
@@ -79,7 +71,7 @@ if (isset($_GET['filter'])) {
         //filter bar(не могу понять какого черта оно отрисовывается не в табличке но ладно)
         $filter = $_SESSION['filter'] ?? null;
         $gradenames = $conn->query("SELECT CONCAT(`grade`,`litera`) AS `gradename` FROM `grades` ORDER BY `grade`,`litera`")->fetch_all();
-        echo '<div class="topnav" style="min-width:0;">';
+        echo '<div class="filter">';
         foreach ($gradenames as $gradename) {
             $gradename = $gradename[0];
             echo "<a style='padding:2px;' " . ($filter == $gradename ? 'class="active"' : '') . "href='./?filter=$gradename'>" . (($gradename != '00') ? $gradename : 'Все') . "</a>";

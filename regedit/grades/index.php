@@ -16,23 +16,13 @@ adminpage();
     <title>Create DB record</title>
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
     <link href='/assets/regedit.css' rel='stylesheet'>
-
+    <link href='/assets/topbar.css' rel='stylesheet'>
 </head>
 
 
 
 <body>
-    <!-- <button id="back" style="position:absolute; " onclick="window.location='../home/';">Назад</button> -->
-    <div class="topnav">
-        <a href="/home/">Пропуски</a>
-        <a href='/home/statistic/'>Статистика</a>
-        <a href='/regedit/teachers/'>Редактировать учителей</a>
-        <a href='/regedit/students/'>Редактировать учеников</a>
-        <a href='/regedit/purposes/'>Редактировать причины</a>
-        <a class="active" href='/regedit/grades/'>Редактировать классы</a>
-        <!-- <a href='/regedit/perms/'>Права</a> -->
-        <a href="/src/actions/logout.php" id="logoutbtn">Выйти из аккаунта</a>
-    </div>
+    <?= makeTopbar(PAGES, '/regedit/grades/', isadmin());?>
 
     <div style='float:right;'>
         <div class='defaultbox'>

@@ -123,7 +123,7 @@ select {
     outline: none;
 }
 
-.topnav {
+/* .topnav {
     background-color: #333;
     overflow: hidden;
     width: 100%;
@@ -161,4 +161,4 @@ select {
 #logoutbtn:hover {
     background-color: rgb(185, 37, 37);
     color: rgb(255, 255, 255);
-}
+} */

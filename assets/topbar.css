@@ -1,0 +1,34 @@
+.topbar {
+    background-color: #333;
+    overflow: hidden;
+    width: 100%;
+    font-weight: 700 !important;
+    font-family: 'Poppins';
+}
+.topbar a {
+    float: left;
+    color: #e2e2e2;
+    text-align: center;
+    padding: 8px 10px;
+    text-decoration: none;
+    font-size: 17px;
+}
+.topbar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+.topbar a.active {
+    background-color: #009aa8;
+    color: white;
+}
+.topbar a.active:hover {
+    background-color: #007e8a;
+    color: rgb(255, 255, 255);
+}
+.topbar #logoutbtn {
+    float: right;
+}
+.topbar #logoutbtn:hover {
+    background-color: rgb(185, 37, 37);
+    color: rgb(255, 255, 255);
+}

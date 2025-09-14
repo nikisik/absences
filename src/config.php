@@ -18,6 +18,16 @@ if (!DEBUGMODE) {
     error_reporting(0);
 }
 
+const PAGES = [
+    ['dir' => '/home/',                 'name' => 'Пропуски',               'onlyadmin' => 0, 'floatright' => 0],
+    ['dir' => '/home/statistic/',        'name' => 'Статистика',             'onlyadmin' => 1, 'floatright' => 0],
+    ['dir' => '/regedit/teachers/',      'name' => 'Редактировать учителей', 'onlyadmin' => 1, 'floatright' => 0],
+    ['dir' => '/regedit/students/',      'name' => 'Редактировать учеников', 'onlyadmin' => 1, 'floatright' => 0],
+    ['dir' => '/regedit/purposes/',      'name' => 'Причины',                'onlyadmin' => 1, 'floatright' => 0],
+    ['dir' => '/regedit/grades/',        'name' => 'Редактировать классы',   'onlyadmin' => 1, 'floatright' => 0],
+    ['dir' => '/src/actions/logout.php', 'name' => 'Выйти из аккаунта',      'onlyadmin' => 0, 'floatright' => 1, 'id' => 'logoutbtn'],
+];
+
 
 global $conn;
 $conn = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME, DB_PORT);

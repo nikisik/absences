@@ -28,34 +28,14 @@ if (isset($_SESSION['message'])) {
   <title>Home</title>
   <link rel="stylesheet" href="/assets/home.css">
   <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+  <link href='/assets/topbar.css' rel='stylesheet'>
+  <link href='/assets/filter.css' rel='stylesheet'>
 </head>
 
 <body style='margin:0;'>
 
 
-  <div class="topnav">
-    <a class="active" href="">Пропуски</a>
-    <!-- <a href="./editstudents/">Редактировать учеников</a> -->
-    <?php
-    if (isadmin()) {
-      echo "
-      
-      <a href='/home/statistic/'>Статистика</a>
-      <a href='/regedit/teachers/'>Редактировать учителей</a>
-      <a href='/regedit/students/'>Редактировать учеников</a>
-      <a href='/regedit/purposes/'>Редактировать причины</a>
-      <a href='/regedit/grades/'>Редактировать классы</a>
-      <!-- <a href='/regedit/perms/'>Права</a> -->
-
-      ";
-      // echo "<a href='/regedit/editstudents/'>Редактировать учеников</a>";
-    }
-    ?>
-
-
-    <a href="/src/actions/logout.php" id="logoutbtn">Выйти из аккаунта</a>
-
-  </div>
+  <?= makeTopbar(PAGES, '/home/', isadmin());?>
 
 
 
@@ -110,12 +90,12 @@ if (isset($_SESSION['message'])) {
 
     if (isadmin()) { //filter bar(не могу понять какого черта оно отрисовывается не в табличке но ладно)
       $grades = $conn->query("SELECT `grade`,`litera` FROM `grades` ORDER BY `grade`,`litera`");
-      echo '<div class="topnav">';
+      echo '<div class="filter">';
       foreach ($grades as $grade) {
         $litera = $grade['litera'] ?? '';
         $grade = $grade['grade'] ?? '';
         $gradename = $grade.$litera;
-        echo "<a style='padding:5px;' " . (($filter ?? null) == $gradename ? 'class="active"' : '') . "href='./?filter=$gradename'>" . (($gradename != '00') ? $gradename : 'Все') . "</a>";
+        echo "<a " . (($filter ?? null) == $gradename ? 'class="active"' : '') . "href='./?filter=$gradename'>" . (($gradename != '00') ? $gradename : 'Все') . "</a>";
       }
       echo "</div>";
     }

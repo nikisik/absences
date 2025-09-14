@@ -23,25 +23,14 @@ if (isset($_SESSION['message'])) {
     <title>Статистика</title>
     <link rel="stylesheet" href="/assets/home.css">
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <link href='/assets/topbar.css' rel='stylesheet'>
+    <link href='/assets/filter.css' rel='stylesheet'>
 </head>
 
 <body style='margin:0;'>
 
 
-    <div class="topnav">
-        <a href="/home/">Пропуски</a>
-        <a class="active" href='/home/statistic/'>Статистика</a>
-        <a href='/regedit/teachers/'>Редактировать учителей</a>
-        <a href='/regedit/students/'>Редактировать учеников</a>
-        <a href='/regedit/purposes/'>Редактировать причины</a>
-        <a href='/regedit/grades/'>Редактировать классы</a>
-        <!-- <a href='/regedit/perms/'>Права</a> -->
-
-
-
-        <a href="/src/actions/logout.php" id="logoutbtn">Выйти из аккаунта</a>
-
-    </div>
+    <?= makeTopbar(PAGES, '/home/statistic/', isadmin());?>
 
 
 

@@ -2,7 +2,7 @@ body {
     min-width: 1100px;
 }
 
-.topnav {
+/* .topnav {
     background-color: #333;
     overflow: hidden;
     width: 100%;
@@ -40,7 +40,7 @@ body {
 #logoutbtn:hover {
     background-color: rgb(185, 37, 37);
     color: rgb(255, 255, 255);
-}
+} */
 
 table {
     font-family: arial, sans-serif;

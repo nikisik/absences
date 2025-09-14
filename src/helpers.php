@@ -83,3 +83,23 @@ function isadmin()
         return false;
     }
 }
+
+function makeTopbar(array $pages,string $dir, bool $isAdmin): string {
+    $classactive = "class='active'";
+    $floatright = "style='float:right;'";
+    $result = "<div class='topbar'>\n";
+    foreach ($pages as $page) {
+        if (!$page['onlyadmin'] || isadmin()){
+            $result = $result . 
+            "<a 
+            href='".$page['dir']."' ".
+            ($page['dir'] == $dir ? $classactive : '').
+            ($page['floatright'] ? $floatright : '').
+            (isset($page['id']) ? "id='".$page['id']."' " : '').
+            " >".
+            $page['name'].
+            "</a>\n";
+        }
+    }
+    return $result . "</div>\n";
+}
