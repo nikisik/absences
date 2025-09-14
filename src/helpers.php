@@ -103,3 +103,21 @@ function makeTopbar(array $pages,string $dir, bool $isAdmin): string {
     }
     return $result . "</div>\n";
 }
+
+function findAllMatchingKeys(mixed $needle, array $haystack, bool $strict = false): array {
+    $result = [];
+    if ($strict) {
+        foreach ($haystack as $key => $value) {
+            if ($value === $needle) {
+                $result[] = $key;
+            }
+        }
+    } else {
+        foreach ($haystack as $key => $value) {
+            if ($value == $needle) {
+                $result[] = $key;
+            }
+        }
+    }
+    return (array)$result;
+}
