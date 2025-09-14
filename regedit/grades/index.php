@@ -13,7 +13,7 @@ adminpage();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create DB record</title>
+    <title>Редактировать классы</title>
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
     <link href='/assets/regedit.css' rel='stylesheet'>
     <link href='/assets/topbar.css' rel='stylesheet'>

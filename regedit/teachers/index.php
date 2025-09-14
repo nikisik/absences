@@ -23,7 +23,7 @@ $keyicon =     '<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" v
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create DB record</title>
+    <title>Редактировать учителей</title>
     <link href='/assets/teachers.css' rel='stylesheet'>
     <link href='/assets/topbar.css' rel='stylesheet'>
 

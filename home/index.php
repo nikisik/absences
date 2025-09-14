@@ -25,7 +25,7 @@ if (isset($_SESSION['message'])) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home</title>
+  <title>Пропуски</title>
   <link rel="stylesheet" href="/assets/home.css">
   <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
   <link href='/assets/topbar.css' rel='stylesheet'>
